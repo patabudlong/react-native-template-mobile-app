@@ -34,31 +34,30 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="login"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-        headerShown: true,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
         tabBarStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          borderTopWidth: 0,
+          elevation: 0,
         },
-        headerStyle: {
-          backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
-        },
-        headerTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: '#4c669f',
+        headerShown: false,
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-        }}
-      />
       <Tabs.Screen
         name="login"
         options={{
           title: 'Login',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          href: null, // This makes the tab non-navigable directly
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          href: null, // This makes the tab non-navigable directly
         }}
       />
       <Tabs.Screen
@@ -66,6 +65,7 @@ export default function TabLayout() {
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <TabBarIcon name="compass" color={color} />,
+          href: null, // This makes the tab non-navigable directly
         }}
       />
     </Tabs>

@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Slot, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,11 +6,21 @@ import * as SplashScreen from 'expo-splash-screen';
 
 const { width, height } = Dimensions.get('window');
 
+export const gradientColors = {
+  primary: ['#00BFFF', '#4c669f', '#192f6a'],
+};
+
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
+export const unstable_settings = {
+  // Ensure that reloading on `/modal` keeps a back button present.
+  initialRouteName: '/(tabs)/login',
+};
+
 export default function RootLayout() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function prepare() {
@@ -22,6 +32,8 @@ export default function RootLayout() {
         console.warn(e);
       } finally {
         setAppIsReady(true);
+        // Navigate to login after splash
+        router.replace('/(tabs)/login');
       }
     }
 
@@ -32,7 +44,7 @@ export default function RootLayout() {
     return (
       <View style={styles.container}>
         <LinearGradient
-          colors={['#00BFFF', '#4c669f', '#192f6a']}
+          colors={gradientColors.primary}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradient}
@@ -54,7 +66,7 @@ export default function RootLayout() {
     );
   }
 
-  return <Stack />;
+  return <Slot />;
 }
 
 const styles = StyleSheet.create({
