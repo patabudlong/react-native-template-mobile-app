@@ -45,7 +45,6 @@ export default function HomeScreen() {
             titleColor="#ffffff"
             colors={['#ffffff']}
             progressBackgroundColor="rgba(255, 255, 255, 0.2)"
-            size="large"
             progressViewOffset={20}
             style={{ backgroundColor: 'transparent' }}
           />

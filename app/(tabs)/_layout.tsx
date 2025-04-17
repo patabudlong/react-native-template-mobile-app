@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 import { useColorScheme } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -40,11 +40,11 @@ export default function TabLayout() {
         initialRouteName="login"
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: '#1a1b1e',
             borderTopWidth: 0,
-            elevation: 0,
           },
-          tabBarActiveTintColor: '#4c669f',
+          tabBarActiveTintColor: '#fff',
+          tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
           headerShown: false,
         }}>
         <Tabs.Screen
@@ -59,8 +59,10 @@ export default function TabLayout() {
         <Tabs.Screen
           name="home"
           options={{
-            title: 'Home',
-            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+            title: 'Dashboard',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="grid-outline" size={size} color={color} />
+            ),
           }}
         />
         <Tabs.Screen
