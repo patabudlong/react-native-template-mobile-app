@@ -36,6 +36,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "splash": {
+      "image": null,
+      "resizeMode": "contain",
+      "backgroundColor": "#4c669f"
     }
   }
 }
