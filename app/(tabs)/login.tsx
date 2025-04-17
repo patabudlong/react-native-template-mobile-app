@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated, Pressable } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter, useNavigation } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const DEFAULT_EMAIL = 'test@test.com';
 const DEFAULT_PASSWORD = 'pass';
@@ -11,6 +12,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -21,6 +23,7 @@ export default function LoginScreen() {
       setPassword('');
       setIsEmailFocused(false);
       setIsPasswordFocused(false);
+      setShowPassword(false);
     });
 
     return unsubscribe;
@@ -38,6 +41,22 @@ export default function LoginScreen() {
         [{ text: 'OK' }]
       );
     }
+  };
+
+  const handleForgotPassword = () => {
+    Alert.alert(
+      'Reset Password',
+      'This feature is not implemented yet.',
+      [{ text: 'OK' }]
+    );
+  };
+
+  const handleSignUp = () => {
+    Alert.alert(
+      'Sign Up',
+      'This feature is not implemented yet.',
+      [{ text: 'OK' }]
+    );
   };
 
   return (
@@ -94,19 +113,36 @@ export default function LoginScreen() {
             Password
           </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { paddingRight: 50 }]}
             placeholder={isPasswordFocused || password ? '' : 'Password'}
             placeholderTextColor="rgba(255, 255, 255, 0.7)"
             value={password}
             onChangeText={setPassword}
             onFocus={() => setIsPasswordFocused(true)}
             onBlur={() => setIsPasswordFocused(false)}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             selectionColor="#fff"
             textContentType="password"
             autoComplete="password"
           />
+          <Pressable 
+            style={styles.passwordToggle}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Ionicons 
+              name={showPassword ? "eye-off" : "eye"} 
+              size={24} 
+              color="rgba(255, 255, 255, 0.7)"
+            />
+          </Pressable>
         </View>
+
+        <TouchableOpacity 
+          style={styles.forgotPasswordContainer}
+          onPress={handleForgotPassword}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.button}
@@ -114,6 +150,13 @@ export default function LoginScreen() {
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
+
+        <View style={styles.signUpContainer}>
+          <Text style={styles.signUpText}>Don't have an account? </Text>
+          <TouchableOpacity onPress={handleSignUp}>
+            <Text style={styles.signUpLink}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.helpContainer}>
           <Text style={styles.helpText}>
@@ -168,6 +211,12 @@ const styles = StyleSheet.create({
     right: 0,
     height: '100%',
   },
+  passwordToggle: {
+    position: 'absolute',
+    right: 15,
+    top: 16,
+    zIndex: 1,
+  },
   button: {
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     padding: 15,
@@ -196,5 +245,30 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     fontSize: 14,
     lineHeight: 20,
+  },
+  forgotPasswordContainer: {
+    alignSelf: 'flex-end',
+    marginTop: -10,
+    marginBottom: 20,
+    paddingHorizontal: 5,
+  },
+  forgotPasswordText: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 14,
+  },
+  signUpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  signUpText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+  },
+  signUpLink: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 }); 
