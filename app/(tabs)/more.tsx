@@ -1,9 +1,36 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function MoreScreen() {
+  const [profileImage, setProfileImage] = useState(require('../../assets/images/default-profile.png'));
+
+  const handleProfilePhotoChange = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (!permissionResult.granted) {
+        Alert.alert('Permission Required', 'Please allow access to your photo library to change profile photo.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setProfileImage({ uri: result.assets[0].uri });
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to change profile photo');
+    }
+  };
+
   return (
     <GradientBackground>
       <View style={styles.container}>
@@ -12,11 +39,14 @@ export default function MoreScreen() {
             <View style={styles.profileImageWrapper}>
               <View style={styles.profileImageContainer}>
                 <Image
-                  source={require('../../assets/images/default-profile.png')}
+                  source={profileImage}
                   style={styles.profileImage}
                 />
               </View>
-              <TouchableOpacity style={styles.cameraIconContainer}>
+              <TouchableOpacity 
+                style={styles.cameraIconContainer}
+                onPress={handleProfilePhotoChange}
+              >
                 <Ionicons name="camera" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
