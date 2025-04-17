@@ -1,87 +1,56 @@
-import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { GradientBackground } from '../../components/GradientBackground';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    if (!email || !password) {
-      alert('Please fill in all fields');
-      return;
-    }
-    // Add your login logic here
-    console.log('Login attempt:', { email });
-  };
-
   return (
-    <ThemedView style={styles.container}>
-      <View style={styles.formContainer}>
-        <ThemedText style={styles.title}>Welcome Back</ThemedText>
-        
+    <GradientBackground>
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          placeholderTextColor="#666"
+          placeholderTextColor="#aaa"
         />
-
         <TextInput
           style={styles.input}
           placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
+          placeholderTextColor="#aaa"
           secureTextEntry
-          placeholderTextColor="#666"
         />
-
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={handleLogin}
-        >
-          <ThemedText style={styles.buttonText}>Sign In</ThemedText>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
       </View>
-    </ThemedView>
+    </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  formContainer: {
-    flex: 1,
     padding: 20,
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 30,
     textAlign: 'center',
   },
   input: {
-    height: 50,
-    backgroundColor: '#f5f5f5',
-    marginBottom: 20,
-    paddingHorizontal: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 15,
     borderRadius: 10,
+    marginBottom: 15,
+    color: '#fff',
     fontSize: 16,
-    color: '#000',
   },
-  loginButton: {
-    backgroundColor: '#007AFF',
-    height: 50,
+  button: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 15,
     borderRadius: 10,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
