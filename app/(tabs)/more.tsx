@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function MoreScreen() {
   return (
@@ -8,11 +9,16 @@ export default function MoreScreen() {
       <View style={styles.container}>
         <View style={styles.topSection}>
           <View style={styles.profileRow}>
-            <View style={styles.profileImageContainer}>
-              <Image
-                source={require('../../assets/images/default-profile.png')}
-                style={styles.profileImage}
-              />
+            <View style={styles.profileImageWrapper}>
+              <View style={styles.profileImageContainer}>
+                <Image
+                  source={require('../../assets/images/default-profile.png')}
+                  style={styles.profileImage}
+                />
+              </View>
+              <TouchableOpacity style={styles.cameraIconContainer}>
+                <Ionicons name="camera" size={20} color="#fff" />
+              </TouchableOpacity>
             </View>
             <View style={styles.profileInfo}>
               <Text style={styles.fullName}>John Doe</Text>
@@ -39,12 +45,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  profileImageWrapper: {
+    position: 'relative',
+    marginRight: 12,
+  },
   profileImageContainer: {
     width: 50,
     height: 50,
     borderRadius: 25,
     overflow: 'hidden',
-    marginRight: 12,
   },
   profileImage: {
     width: '100%',
@@ -62,5 +71,15 @@ const styles = StyleSheet.create({
   lastLogin: {
     fontSize: 14,
     color: 'rgba(255, 255, 255, 0.7)',
+  },
+  cameraIconContainer: {
+    position: 'absolute',
+    right: -8,
+    bottom: -8,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 16,
+    padding: 6,
+    zIndex: 2,
+    elevation: 2,
   },
 }); 
