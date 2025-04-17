@@ -28,6 +28,11 @@ export default function HomeScreen() {
     console.log('Inbox pressed');
   };
 
+  const handleScan = () => {
+    // Handle scan press
+    console.log('Scan pressed');
+  };
+
   return (
     <GradientBackground>
       <ScrollView
@@ -63,12 +68,24 @@ export default function HomeScreen() {
                 </View>
               </View>
               
-              <TouchableOpacity style={styles.inboxContainer} onPress={handleInbox}>
-                <Ionicons name="mail-outline" size={28} color="#fff" />
-                <View style={styles.badgeContainer}>
-                  <Text style={styles.badgeText}>3</Text>
+              <View style={styles.actionsContainer}>
+                <View style={styles.inboxWrapper}>
+                  <TouchableOpacity style={styles.inboxContainer} onPress={() => {}}>
+                    <Ionicons name="mail-outline" size={28} color="#fff" />
+                    <View style={styles.badgeContainer}>
+                      <Text style={styles.badgeText}>3</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <Text style={styles.inboxLabel}>Inbox</Text>
                 </View>
-              </TouchableOpacity>
+
+                <View style={styles.inboxWrapper}>
+                  <TouchableOpacity style={styles.inboxContainer} onPress={handleScan}>
+                    <Ionicons name="scan-outline" size={28} color="#fff" />
+                  </TouchableOpacity>
+                  <Text style={styles.inboxLabel}>Scan</Text>
+                </View>
+              </View>
             </View>
             
             <Text style={styles.dashboardLabel}>Dashboard</Text>
@@ -203,5 +220,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: 'bold',
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  inboxWrapper: {
+    alignItems: 'center',
+  },
+  inboxLabel: {
+    color: '#fff',
+    fontSize: 12,
+    marginTop: 4,
+    opacity: 0.8,
   },
 }); 
