@@ -70,7 +70,7 @@ export default function HomeScreen() {
               
               <View style={styles.actionsContainer}>
                 <View style={styles.inboxWrapper}>
-                  <TouchableOpacity style={styles.inboxContainer} onPress={() => {}}>
+                  <TouchableOpacity style={styles.inboxContainer} onPress={handleInbox}>
                     <Ionicons name="mail-outline" size={28} color="#fff" />
                     <View style={styles.badgeContainer}>
                       <Text style={styles.badgeText}>3</Text>
