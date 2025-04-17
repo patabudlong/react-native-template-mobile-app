@@ -178,13 +178,13 @@ export default function LoginScreen() {
           <Text style={styles.biometricText}>Sign in with Touch ID</Text>
         </TouchableOpacity>
 
-        <View style={styles.helpContainer}>
+        {/* <View style={styles.helpContainer}>
           <Text style={styles.helpText}>
             Default Login:{'\n'}
             Email: test@test.com{'\n'}
             Password: pass
           </Text>
-        </View>
+        </View> */}
       </View>
     </GradientBackground>
   );
