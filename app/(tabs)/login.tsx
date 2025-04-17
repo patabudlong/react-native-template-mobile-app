@@ -59,6 +59,14 @@ export default function LoginScreen() {
     );
   };
 
+  const handleBiometricAuth = () => {
+    Alert.alert(
+      'Biometric Authentication',
+      'This feature is not implemented yet.',
+      [{ text: 'OK' }]
+    );
+  };
+
   return (
     <GradientBackground>
       <View style={styles.container}>
@@ -157,6 +165,18 @@ export default function LoginScreen() {
             <Text style={styles.signUpLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity 
+          style={styles.biometricContainer}
+          onPress={handleBiometricAuth}
+        >
+          <Ionicons 
+            name="finger-print-outline" 
+            size={28} 
+            color="rgba(255, 255, 255, 0.9)"
+          />
+          <Text style={styles.biometricText}>Sign in with Touch ID</Text>
+        </TouchableOpacity>
 
         <View style={styles.helpContainer}>
           <Text style={styles.helpText}>
@@ -270,5 +290,22 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+  },
+  biometricContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  biometricText: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 16,
+    marginLeft: 10,
+    fontWeight: '500',
   },
 }); 
