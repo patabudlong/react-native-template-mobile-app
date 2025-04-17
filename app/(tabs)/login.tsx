@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
-import { useRouter } from 'expo-router';
+import { useRouter, useNavigation } from 'expo-router';
 
 const DEFAULT_EMAIL = 'test@test.com';
 const DEFAULT_PASSWORD = 'pass';
@@ -12,6 +12,19 @@ export default function LoginScreen() {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const router = useRouter();
+  const navigation = useNavigation();
+
+  // Clear inputs when screen comes into focus
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setEmail('');
+      setPassword('');
+      setIsEmailFocused(false);
+      setIsPasswordFocused(false);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const handleLogin = () => {
     if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
