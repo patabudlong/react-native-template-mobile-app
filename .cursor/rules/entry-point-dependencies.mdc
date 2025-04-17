@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+---
+
+# Your rule content
+
+- Do not update the [package.json](mdc:package.json) file
+- Maintain TypeScript
+- Maintain Expo Router
+- Maintain Jest for testing
+- Maintain Expo version 52.0.46
