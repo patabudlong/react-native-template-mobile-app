@@ -6,10 +6,6 @@ export default function MoreScreen() {
   return (
     <GradientBackground>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>More</Text>
-        </View>
-        
         <View style={styles.topSection}>
           <View style={styles.profileRow}>
             <View style={styles.profileImageContainer}>
@@ -32,16 +28,6 @@ export default function MoreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   topSection: {
     paddingHorizontal: 20,
