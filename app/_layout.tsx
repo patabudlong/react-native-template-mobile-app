@@ -10,7 +10,7 @@ export const gradientColors = {
   primary: ['#00BFFF', '#4c669f', '#192f6a'],
 };
 
-// Prevent the splash screen from auto-hiding
+// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
@@ -25,20 +25,27 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
-        // Simulate some loading time
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Pre-load fonts, make any API calls you need to do here
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulated delay
+        
+        // Hide splash screen
         await SplashScreen.hideAsync();
+        
+        // Tell the application to render
+        setAppIsReady(true);
       } catch (e) {
         console.warn(e);
-      } finally {
-        setAppIsReady(true);
-        // Navigate to login after splash
-        router.replace('/(tabs)/login');
       }
     }
 
     prepare();
   }, []);
+
+  useEffect(() => {
+    if (appIsReady) {
+      router.replace('/(tabs)/login');
+    }
+  }, [appIsReady]);
 
   return (
     <>
@@ -60,10 +67,7 @@ export default function RootLayout() {
                 <Text style={styles.text}>MyApp</Text>
               </View>
               <View style={styles.spinnerContainer}>
-                <ActivityIndicator 
-                  size="large" 
-                  color="#ffffff" 
-                />
+                <ActivityIndicator size="large" color="#ffffff" />
                 <Text style={styles.loadingText}>Loading...</Text>
               </View>
             </View>
@@ -79,13 +83,11 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: width,
-    height: height,
   },
   gradient: {
     flex: 1,
-    width: '100%',
-    height: '100%',
+    width: width,
+    height: height,
   },
   content: {
     flex: 1,
@@ -93,18 +95,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 20,
-    borderRadius: 20,
-    marginBottom: 40,
+    marginBottom: 50,
   },
   text: {
+    color: '#ffffff',
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#ffffff',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 5,
   },
   spinnerContainer: {
     alignItems: 'center',
@@ -113,7 +109,5 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginTop: 10,
     fontSize: 16,
-    fontWeight: '500',
-    opacity: 0.8,
   },
 });
