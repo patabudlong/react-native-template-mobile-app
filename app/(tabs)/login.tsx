@@ -86,11 +86,11 @@ export default function LoginScreen() {
               opacity: isEmailFocused || email ? 1 : 0,
             }
           ]}>
-            Email
+            Email or Username
           </Text>
           <TextInput
             style={styles.input}
-            placeholder={isEmailFocused || email ? '' : 'Email'}
+            placeholder={isEmailFocused || email ? '' : 'Email or Username'}
             placeholderTextColor="rgba(255, 255, 255, 0.7)"
             value={email}
             onChangeText={setEmail}
@@ -99,8 +99,8 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             selectionColor="#fff"
-            textContentType="emailAddress"
-            autoComplete="email"
+            textContentType="username"
+            autoComplete="username"
           />
         </View>
         
