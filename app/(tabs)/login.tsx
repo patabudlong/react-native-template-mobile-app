@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated, Pressable } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated, Pressable, Keyboard, Platform } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter, useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,8 +13,25 @@ export default function LoginScreen() {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const keyboardWillShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const keyboardWillHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardWillShowListener.remove();
+      keyboardWillHideListener.remove();
+    };
+  }, []);
 
   // Clear inputs when screen comes into focus
   useEffect(() => {
@@ -178,6 +195,12 @@ export default function LoginScreen() {
           <Text style={styles.biometricText}>Sign in with Touch ID</Text>
         </TouchableOpacity>
 
+        {!isKeyboardVisible && (
+          <View style={styles.versionContainer}>
+            <Text style={styles.versionText}>Version 1.0.0</Text>
+          </View>
+        )}
+
         {/* <View style={styles.helpContainer}>
           <Text style={styles.helpText}>
             Default Login:{'\n'}
@@ -307,5 +330,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     fontWeight: '500',
+  },
+  versionContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  versionText: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: 12,
   },
 }); 
