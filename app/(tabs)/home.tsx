@@ -10,23 +10,38 @@ export default function HomeScreen() {
     router.replace('/(tabs)/login');
   };
 
+  const handleInbox = () => {
+    // Handle inbox press
+    console.log('Inbox pressed');
+  };
+
   return (
     <GradientBackground>
       <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.profileSection}>
-            <View style={styles.profileImageContainer}>
-              <Image
-                source={{ uri: 'https://via.placeholder.com/150' }}
-                style={styles.profileImage}
-              />
-              <View style={styles.onlineIndicator} />
+          <View style={styles.headerTop}>
+            <View style={styles.profileSection}>
+              <View style={styles.profileImageContainer}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/150' }}
+                  style={styles.profileImage}
+                />
+                <View style={styles.onlineIndicator} />
+              </View>
+              <View style={styles.profileInfo}>
+                <Text style={styles.welcomeText}>Welcome back,</Text>
+                <Text style={styles.userName}>John Doe</Text>
+              </View>
             </View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.welcomeText}>Welcome back,</Text>
-              <Text style={styles.userName}>John Doe</Text>
-            </View>
+            
+            <TouchableOpacity style={styles.inboxContainer} onPress={handleInbox}>
+              <Ionicons name="mail-outline" size={28} color="#fff" />
+              <View style={styles.badgeContainer}>
+                <Text style={styles.badgeText}>3</Text>
+              </View>
+            </TouchableOpacity>
           </View>
+          
           <Text style={styles.dashboardLabel}>Dashboard</Text>
         </View>
 
@@ -55,10 +70,15 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginBottom: 30,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
   },
   profileImageContainer: {
     position: 'relative',
@@ -126,6 +146,30 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  inboxContainer: {
+    position: 'relative',
+    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#FF3B30',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#4c669f',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: 'bold',
   },
 }); 
