@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 
@@ -9,6 +9,8 @@ const DEFAULT_PASSWORD = 'pass';
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmailFocused, setIsEmailFocused] = useState(false);
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const router = useRouter();
 
   const handleLogin = () => {
@@ -30,24 +32,68 @@ export default function LoginScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Welcome Back</Text>
         
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <View style={styles.inputContainer}>
+          <Text style={[
+            styles.floatingLabel,
+            {
+              transform: [{
+                translateY: isEmailFocused || email ? -25 : 0
+              }],
+              fontSize: isEmailFocused || email ? 12 : 16,
+              backgroundColor: isEmailFocused || email ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
+              paddingHorizontal: isEmailFocused || email ? 8 : 0,
+              borderRadius: isEmailFocused || email ? 4 : 0,
+              opacity: isEmailFocused || email ? 1 : 0,
+            }
+          ]}>
+            Email
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder={isEmailFocused || email ? '' : 'Email'}
+            placeholderTextColor="rgba(255, 255, 255, 0.7)"
+            value={email}
+            onChangeText={setEmail}
+            onFocus={() => setIsEmailFocused(true)}
+            onBlur={() => setIsEmailFocused(false)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            selectionColor="#fff"
+            textContentType="emailAddress"
+            autoComplete="email"
+          />
+        </View>
         
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#aaa"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <View style={styles.inputContainer}>
+          <Text style={[
+            styles.floatingLabel,
+            {
+              transform: [{
+                translateY: isPasswordFocused || password ? -25 : 0
+              }],
+              fontSize: isPasswordFocused || password ? 12 : 16,
+              backgroundColor: isPasswordFocused || password ? 'rgba(0, 0, 0, 0.3)' : 'transparent',
+              paddingHorizontal: isPasswordFocused || password ? 8 : 0,
+              borderRadius: isPasswordFocused || password ? 4 : 0,
+              opacity: isPasswordFocused || password ? 1 : 0,
+            }
+          ]}>
+            Password
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder={isPasswordFocused || password ? '' : 'Password'}
+            placeholderTextColor="rgba(255, 255, 255, 0.7)"
+            value={password}
+            onChangeText={setPassword}
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
+            secureTextEntry
+            selectionColor="#fff"
+            textContentType="password"
+            autoComplete="password"
+          />
+        </View>
 
         <TouchableOpacity 
           style={styles.button}
@@ -78,38 +124,64 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 30,
+    marginBottom: 40,
     textAlign: 'center',
   },
+  inputContainer: {
+    marginBottom: 20,
+    position: 'relative',
+    height: 56,
+  },
+  floatingLabel: {
+    position: 'absolute',
+    left: 15,
+    top: 15,
+    color: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'transparent',
+    zIndex: 1,
+    paddingVertical: 2,
+  },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     padding: 15,
     borderRadius: 10,
-    marginBottom: 15,
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '100%',
   },
   button: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   helpContainer: {
     marginTop: 30,
     padding: 15,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   helpText: {
     color: '#fff',
     textAlign: 'center',
-    opacity: 0.8,
+    opacity: 0.9,
+    fontSize: 14,
+    lineHeight: 20,
   },
 }); 
