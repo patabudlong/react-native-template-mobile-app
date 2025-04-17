@@ -1,19 +1,23 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
+import { Tabs, usePathname } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SharedHeader } from '../../components/SharedHeader';
 import { GradientBackground } from '../../components/GradientBackground';
 
 export default function TabLayout() {
+  const pathname = usePathname();
+  const isLoginScreen = pathname === '/login';
+
   return (
     <GradientBackground>
-      <SharedHeader />
+      {!isLoginScreen && <SharedHeader />}
       <Tabs
         screenOptions={{
           headerShown: false,
           tabBarStyle: { 
             backgroundColor: '#192f6a',
             borderTopWidth: 0,
+            display: isLoginScreen ? 'none' : 'flex',
           },
         }}
       >
