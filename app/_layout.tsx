@@ -1,6 +1,6 @@
 import { Slot, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text, Dimensions, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -40,33 +40,40 @@ export default function RootLayout() {
     prepare();
   }, []);
 
-  if (!appIsReady) {
-    return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={gradientColors.primary}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradient}
-        >
-          <View style={styles.content}>
-            <View style={styles.logoContainer}>
-              <Text style={styles.text}>MyApp</Text>
+  return (
+    <>
+      <StatusBar 
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      {!appIsReady ? (
+        <View style={styles.container}>
+          <LinearGradient
+            colors={gradientColors.primary}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradient}
+          >
+            <View style={styles.content}>
+              <View style={styles.logoContainer}>
+                <Text style={styles.text}>MyApp</Text>
+              </View>
+              <View style={styles.spinnerContainer}>
+                <ActivityIndicator 
+                  size="large" 
+                  color="#ffffff" 
+                />
+                <Text style={styles.loadingText}>Loading...</Text>
+              </View>
             </View>
-            <View style={styles.spinnerContainer}>
-              <ActivityIndicator 
-                size="large" 
-                color="#ffffff" 
-              />
-              <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  }
-
-  return <Slot />;
+          </LinearGradient>
+        </View>
+      ) : (
+        <Slot />
+      )}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({

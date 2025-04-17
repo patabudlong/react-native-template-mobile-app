@@ -3,6 +3,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { useColorScheme } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -33,40 +34,43 @@ export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
-    <Tabs
-      initialRouteName="login"
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          borderTopWidth: 0,
-          elevation: 0,
-        },
-        tabBarActiveTintColor: '#4c669f',
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="login"
-        options={{
-          title: 'Login',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          tabBarStyle: { display: 'none' },
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <TabBarIcon name="compass" color={color} />,
-        }}
-      />
-    </Tabs>
+    <>
+      <StatusBar style="dark" />
+      <Tabs
+        initialRouteName="login"
+        screenOptions={{
+          tabBarStyle: {
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            borderTopWidth: 0,
+            elevation: 0,
+          },
+          tabBarActiveTintColor: '#4c669f',
+          headerShown: false,
+        }}>
+        <Tabs.Screen
+          name="login"
+          options={{
+            title: 'Login',
+            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+            tabBarStyle: { display: 'none' },
+            href: null,
+          }}
+        />
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="explore"
+          options={{
+            title: 'Explore',
+            tabBarIcon: ({ color }) => <TabBarIcon name="compass" color={color} />,
+          }}
+        />
+      </Tabs>
+    </>
   );
 }
