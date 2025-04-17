@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
@@ -15,7 +16,7 @@ export default function NotFoundScreen() {
         </Link>
       </ThemedView>
     </>
-  );
+  );  
 }
 
 const styles = StyleSheet.create({

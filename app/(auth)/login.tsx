@@ -48,10 +48,8 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
-      // Successful login
-      router.push('/home');
+      router.replace('/(tabs)/home');
     } else {
-      // Failed login
       Alert.alert(
         'Login Failed',
         'Invalid email or password. Please try again.',

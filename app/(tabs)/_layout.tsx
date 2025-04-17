@@ -1,61 +1,26 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-import { useColorScheme } from 'react-native';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-
-// Define Colors object if it doesn't exist
-const Colors = {
-  light: {
-    tint: '#2f95dc',
-    tabIconDefault: '#ccc',
-    tabIconSelected: '#2f95dc',
-  },
-  dark: {
-    tint: '#fff',
-    tabIconDefault: '#ccc',
-    tabIconSelected: '#fff',
-  }
-};
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { Tabs, usePathname } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { SharedHeader } from '../../components/SharedHeader';
+import { GradientBackground } from '../../components/GradientBackground';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme() ?? 'light';
+  const pathname = usePathname();
+  const isLoginScreen = pathname === '/auth/login';
 
   return (
-    <>
-      <StatusBar style="dark" />
+    <GradientBackground>
+      {!isLoginScreen && <SharedHeader />}
       <Tabs
-        initialRouteName="login"
         screenOptions={{
-          tabBarStyle: {
-            backgroundColor: '#1a1b1e',
-            borderTopWidth: 0,
-          },
-          tabBarActiveTintColor: '#fff',
-          tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
           headerShown: false,
-        }}>
-        <Tabs.Screen
-          name="login"
-          options={{
-            title: 'Login',
-            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-            tabBarStyle: { display: 'none' },
-            href: null,
-          }}
-        />
+          tabBarStyle: { 
+            backgroundColor: '#192f6a',
+            borderTopWidth: 0,
+            display: isLoginScreen ? 'none' : 'flex',
+          },
+        }}
+      >
         <Tabs.Screen
           name="home"
           options={{
@@ -69,10 +34,21 @@ export default function TabLayout() {
           name="explore"
           options={{
             title: 'Explore',
-            tabBarIcon: ({ color }) => <TabBarIcon name="compass" color={color} />,
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="compass" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="more"
+          options={{
+            title: 'More',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="ellipsis-horizontal" size={size} color={color} />
+            ),
           }}
         />
       </Tabs>
-    </>
+    </GradientBackground>
   );
 }
