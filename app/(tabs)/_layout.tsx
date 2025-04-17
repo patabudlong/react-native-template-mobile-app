@@ -6,7 +6,7 @@ import { GradientBackground } from '../../components/GradientBackground';
 
 export default function TabLayout() {
   const pathname = usePathname();
-  const isLoginScreen = pathname === '/login';
+  const isLoginScreen = pathname === '/auth/login';
 
   return (
     <GradientBackground>
