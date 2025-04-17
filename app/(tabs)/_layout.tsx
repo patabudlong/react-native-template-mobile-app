@@ -49,15 +49,13 @@ export default function TabLayout() {
         options={{
           title: 'Login',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          href: null, // This makes the tab non-navigable directly
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          href: null, // This makes the tab non-navigable directly
         }}
       />
       <Tabs.Screen
@@ -65,7 +63,6 @@ export default function TabLayout() {
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <TabBarIcon name="compass" color={color} />,
-          href: null, // This makes the tab non-navigable directly
         }}
       />
     </Tabs>
