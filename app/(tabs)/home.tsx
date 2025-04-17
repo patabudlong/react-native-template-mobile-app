@@ -19,10 +19,6 @@ export default function HomeScreen() {
     }, 2000);
   }, []);
 
-  const handleLogout = () => {
-    router.replace('/(tabs)/login');
-  };
-
   const handleInbox = () => {
     // Handle inbox press
     console.log('Inbox pressed');
@@ -86,20 +82,6 @@ export default function HomeScreen() {
                 </View>
               </View>
             </View>
-            
-            <Text style={styles.dashboardLabel}>Dashboard</Text>
-          </View>
-
-          <View style={styles.content}>
-            <Text style={styles.title}>Welcome Home!</Text>
-            <Text style={styles.subtitle}>You've successfully logged in</Text>
-            
-            <TouchableOpacity 
-              style={styles.button}
-              onPress={handleLogout}
-            >
-              <Text style={styles.buttonText}>Logout</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
