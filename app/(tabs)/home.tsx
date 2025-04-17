@@ -1,13 +1,23 @@
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, RefreshControl, ScrollView } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useState, useCallback } from 'react';
 
 // Update path to use assets/images
 const DEFAULT_PROFILE_IMAGE = require('../../assets/images/default-profile.png');
 
 export default function HomeScreen() {
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Add your refresh logic here
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const handleLogout = () => {
     router.replace('/(tabs)/login');
@@ -20,51 +30,71 @@ export default function HomeScreen() {
 
   return (
     <GradientBackground>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <View style={styles.profileSection}>
-              <View style={styles.profileImageContainer}>
-                <Image
-                  source={DEFAULT_PROFILE_IMAGE}
-                  style={styles.profileImage}
-                />
-                <View style={styles.onlineIndicator} />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#ffffff"
+            titleColor="#ffffff"
+            colors={['#ffffff']}
+            progressBackgroundColor="rgba(255, 255, 255, 0.2)"
+            size="large"
+            progressViewOffset={20}
+            style={{ backgroundColor: 'transparent' }}
+          />
+        }
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerTop}>
+              <View style={styles.profileSection}>
+                <View style={styles.profileImageContainer}>
+                  <Image
+                    source={DEFAULT_PROFILE_IMAGE}
+                    style={styles.profileImage}
+                  />
+                  <View style={styles.onlineIndicator} />
+                </View>
+                <View style={styles.profileInfo}>
+                  <Text style={styles.welcomeText}>Welcome back,</Text>
+                  <Text style={styles.userName}>John Doe</Text>
+                </View>
               </View>
-              <View style={styles.profileInfo}>
-                <Text style={styles.welcomeText}>Welcome back,</Text>
-                <Text style={styles.userName}>John Doe</Text>
-              </View>
+              
+              <TouchableOpacity style={styles.inboxContainer} onPress={handleInbox}>
+                <Ionicons name="mail-outline" size={28} color="#fff" />
+                <View style={styles.badgeContainer}>
+                  <Text style={styles.badgeText}>3</Text>
+                </View>
+              </TouchableOpacity>
             </View>
             
-            <TouchableOpacity style={styles.inboxContainer} onPress={handleInbox}>
-              <Ionicons name="mail-outline" size={28} color="#fff" />
-              <View style={styles.badgeContainer}>
-                <Text style={styles.badgeText}>3</Text>
-              </View>
+            <Text style={styles.dashboardLabel}>Dashboard</Text>
+          </View>
+
+          <View style={styles.content}>
+            <Text style={styles.title}>Welcome Home!</Text>
+            <Text style={styles.subtitle}>You've successfully logged in</Text>
+            
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={handleLogout}
+            >
+              <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
           </View>
-          
-          <Text style={styles.dashboardLabel}>Dashboard</Text>
         </View>
-
-        <View style={styles.content}>
-          <Text style={styles.title}>Welcome Home!</Text>
-          <Text style={styles.subtitle}>You've successfully logged in</Text>
-          
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={handleLogout}
-          >
-            <Text style={styles.buttonText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -120,7 +150,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 28,
     fontWeight: 'bold',
-    marginTop: 10,
   },
   content: {
     flex: 1,
