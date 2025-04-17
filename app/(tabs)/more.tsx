@@ -3,8 +3,10 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-na
 import { GradientBackground } from '../../components/GradientBackground';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
 
 export default function MoreScreen() {
+  const router = useRouter();
   const [profileImage, setProfileImage] = useState(require('../../assets/images/default-profile.png'));
 
   const handleProfilePhotoChange = async () => {
@@ -36,26 +38,52 @@ export default function MoreScreen() {
       <View style={styles.container}>
         <View style={styles.topSection}>
           <View style={styles.profileRow}>
-            <View style={styles.profileImageWrapper}>
+            <TouchableOpacity 
+              style={styles.profileImageWrapper}
+              onPress={handleProfilePhotoChange}
+            >
               <View style={styles.profileImageContainer}>
                 <Image
                   source={profileImage}
                   style={styles.profileImage}
                 />
               </View>
-              <TouchableOpacity 
-                style={styles.cameraIconContainer}
-                onPress={handleProfilePhotoChange}
-              >
+              <View style={styles.cameraIconContainer}>
                 <Ionicons name="camera" size={20} color="#fff" />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
             <View style={styles.profileInfo}>
               <Text style={styles.fullName}>John Doe</Text>
               <Text style={styles.lastLogin}>Last login: Today, 2:30 PM</Text>
+              <TouchableOpacity onPress={() => Alert.alert('Coming Soon', 'Profile view is under development')}>
+                <Text style={styles.viewProfile}>View Profile</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
+
+        <TouchableOpacity 
+          style={styles.logoutButton}
+          onPress={() => Alert.alert(
+            'Logout',
+            'Are you sure you want to logout?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Logout',
+                style: 'destructive',
+                onPress: () => {
+                  router.replace('/(auth)/login');
+                },
+              },
+            ],
+          )}
+        >
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
     </GradientBackground>
   );
@@ -77,7 +105,7 @@ const styles = StyleSheet.create({
   },
   profileImageWrapper: {
     position: 'relative',
-    marginRight: 12,
+    marginRight: 25,
   },
   profileImageContainer: {
     width: 50,
@@ -106,10 +134,32 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -8,
     bottom: -8,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(255, 140, 0, 0.8)',
     borderRadius: 16,
     padding: 6,
     zIndex: 2,
     elevation: 2,
+  },
+  viewProfile: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 4,
+    opacity: 0.9,
+  },
+  logoutButton: {
+    backgroundColor: 'rgba(255, 140, 0, 0.2)',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 'auto',
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 140, 0, 0.4)',
+  },
+  logoutText: {
+    color: '#FF8C00',
+    fontSize: 17,
+    fontWeight: '700',
   },
 }); 
