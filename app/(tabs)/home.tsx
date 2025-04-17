@@ -70,6 +70,7 @@ export default function HomeScreen() {
         </View>
 
         <ScrollView
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
           refreshControl={
             <RefreshControl
