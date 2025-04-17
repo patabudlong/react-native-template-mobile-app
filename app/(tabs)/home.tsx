@@ -3,6 +3,9 @@ import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+// Update path to use assets/images
+const DEFAULT_PROFILE_IMAGE = require('../../assets/images/default-profile.png');
+
 export default function HomeScreen() {
   const router = useRouter();
 
@@ -23,7 +26,7 @@ export default function HomeScreen() {
             <View style={styles.profileSection}>
               <View style={styles.profileImageContainer}>
                 <Image
-                  source={{ uri: 'https://via.placeholder.com/150' }}
+                  source={DEFAULT_PROFILE_IMAGE}
                   style={styles.profileImage}
                 />
                 <View style={styles.onlineIndicator} />
