@@ -19,6 +19,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emailError, setEmailError] = useState('');
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -83,7 +84,7 @@ export default function LoginScreen() {
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      console.error('Login failed:', error);
+      // Silent error handling in production
       Alert.alert(
         'Login Failed',
         'Incorrect email or password. Please try again.',
@@ -116,6 +117,18 @@ export default function LoginScreen() {
       'This feature is not implemented yet.',
       [{ text: 'OK' }]
     );
+  };
+
+  const validateEmail = (text: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!text) {
+      setEmailError('');
+    } else if (!emailRegex.test(text)) {
+      setEmailError('Please enter a valid email address');
+    } else {
+      setEmailError('');
+    }
   };
 
   return (
@@ -153,6 +166,9 @@ export default function LoginScreen() {
             textContentType="emailAddress"
             autoComplete="email"
           />
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
         </View>
         
         <View style={styles.inputContainer}>
@@ -264,7 +280,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
     position: 'relative',
-    height: 56,
+    height: 76,
   },
   floatingLabel: {
     position: 'absolute',
@@ -287,7 +303,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: '100%',
+    height: 56,
   },
   passwordToggle: {
     position: 'absolute',
@@ -383,5 +399,16 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.7,
-  }
+  },
+  inputError: {
+    borderColor: 'rgba(255, 107, 107, 0.7)',
+    borderWidth: 1,
+  },
+  errorText: {
+    color: 'rgba(255, 182, 182, 0.9)',
+    fontSize: 12,
+    position: 'absolute',
+    top: 60,
+    left: 4,
+  },
 }); 
