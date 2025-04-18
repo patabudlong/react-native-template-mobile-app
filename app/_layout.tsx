@@ -1,49 +1,26 @@
 import { useEffect, useState } from 'react';
-import { Modal, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Modal, View, ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Stack } from 'expo-router';
 import { api } from '../services/apiService';
-import React from 'react';
-
-interface HealthResponse {
-  status: string;
-  message: string;
-}
 
 export default function RootLayout() {
-  const [showModal, setShowModal] = useState(true);
-  const [connectionStatus, setConnectionStatus] = useState({
-    message: 'Checking API connection...',
-    isError: false
-  });
+  const [showSpinner, setShowSpinner] = useState(true);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const checkHealth = async () => {
       try {
-        console.log('Checking API health...');
-        const response = await api.get<HealthResponse>('/health');
-
+        const response = await api.get('/health');
         if (response.error) {
           throw new Error(response.error);
         }
-
-        if (response.data?.status === 'healthy') {
-          
-          setConnectionStatus({
-            message: response.data.message || 'API is healthy!',
-            isError: false
-          });
-          // Hide modal after success
-          setTimeout(() => setShowModal(false), 2000);
-        } else {
-          throw new Error('API returned unhealthy status');
-        }
+        setTimeout(() => setShowSpinner(false), 2000);
       } catch (error) {
         console.error('Health check failed:', error);
-        setConnectionStatus({
-          message: `API connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          isError: true
-        });
-        // Keep modal visible on error
+        setShowSpinner(false);
+        setErrorMessage(error instanceof Error ? error.message : 'Connection failed');
+        setShowError(true);
       }
     };
 
@@ -53,22 +30,36 @@ export default function RootLayout() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
+      
+      {/* Loading Spinner */}
       <Modal
         transparent
-        visible={showModal}
+        visible={showSpinner}
         animationType="fade"
       >
         <View style={styles.modalContainer}>
-          <View style={[
-            styles.modalContent,
-            connectionStatus.isError ? styles.errorContent : styles.successContent
-          ]}>
-            <ActivityIndicator 
-              size="large" 
-              color={connectionStatus.isError ? '#FF3B30' : '#FF8C00'} 
-              style={styles.spinner}
-            />
-            <Text style={styles.modalText}>{connectionStatus.message}</Text>
+          <View style={styles.spinnerContent}>
+            <ActivityIndicator size="large" color="#FF8C00" />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Error Modal */}
+      <Modal
+        transparent
+        visible={showError}
+        animationType="fade"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.errorContent}>
+            <Text style={styles.errorTitle}>Connection Error</Text>
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => setShowError(false)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -83,28 +74,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContent: {
+  spinnerContent: {
     padding: 20,
     borderRadius: 10,
-    borderWidth: 1,
-    minWidth: 200,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    minWidth: 100,
     alignItems: 'center',
   },
-  successContent: {
-    backgroundColor: 'rgba(255, 140, 0, 0.9)',
-    borderColor: 'rgba(255, 255, 255, 0.2)',
-  },
   errorContent: {
-    backgroundColor: 'rgba(255, 59, 48, 0.9)',
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    minWidth: 300,
+    alignItems: 'center',
   },
-  modalText: {
-    color: '#fff',
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF3B30',
+    marginBottom: 10,
+  },
+  errorMessage: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: '#FF8C00',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
-    textAlign: 'center',
-  },
-  spinner: {
-    marginBottom: 15,
-  },
+  }
 });
