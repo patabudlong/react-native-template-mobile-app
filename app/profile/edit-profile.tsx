@@ -20,7 +20,7 @@ interface UserDetails {
 }
 
 export default function EditProfileScreen() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const router = useRouter();
   
   const [formData, setFormData] = useState({
@@ -97,6 +97,12 @@ export default function EditProfileScreen() {
         setShowAlert(true);
         return;
       }
+
+      setUser({
+        ...user,
+        ...formData,
+        full_name: `${formData.first_name} ${formData.middle_name ? formData.middle_name + ' ' : ''}${formData.last_name}${formData.extension_name ? ' ' + formData.extension_name : ''}`
+      });
 
       setAlertConfig({
         type: 'success',
@@ -229,9 +235,13 @@ export default function EditProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={[styles.button, styles.updateButton]}
+            style={[
+              styles.button, 
+              styles.updateButton,
+              (isLoading || showAlert) && styles.disabledButton
+            ]}
             onPress={handleUpdate}
-            disabled={isLoading}
+            disabled={isLoading || showAlert}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" />
@@ -349,5 +359,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontStyle: 'italic',
     fontWeight: '500',
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 }); 
