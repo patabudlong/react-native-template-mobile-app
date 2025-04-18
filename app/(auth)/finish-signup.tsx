@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Pressable, Alert } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -11,6 +11,7 @@ export default function FinishSignUpScreen() {
   const email = params.email as string;
   const router = useRouter();
   const [formData, setFormData] = useState({
+    email: email,
     password: '',
     first_name: '',
     middle_name: '',
@@ -68,8 +69,12 @@ We implement security measures to protect your personal information.
 We do not sell or share your personal information with third parties except as described in this policy.`;
 
   const handleFinish = () => {
-    // TODO: Implement finish signup logic
-    console.log('Finish sign up:', formData);
+    console.log('Form data with email:', formData);
+    
+    if (!formData.first_name || !formData.last_name || !formData.password) {
+      Alert.alert('Missing Information', 'Please fill in all required fields');
+      return;
+    }
   };
 
   return (

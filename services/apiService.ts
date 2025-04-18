@@ -3,8 +3,6 @@ import { authService } from './authService';
 // Use single URL for API
 const baseUrl = 'http://192.168.1.8:8001';
 
-console.log('Using API URL:', baseUrl);
-
 interface ApiResponse<T> {
   data?: T;
   error?: string;
@@ -35,7 +33,6 @@ export const api = {
 
       const textResponse = await response.text();
       console.log('Raw response:', textResponse);
-      console.log('Response status:', response.status);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} - ${textResponse}`);
@@ -108,7 +105,7 @@ export const api = {
 
       const textResponse = await response.text();
       console.log('Raw response:', textResponse);
-      console.log('Response status:', response.status);
+      
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} - ${textResponse}`);
