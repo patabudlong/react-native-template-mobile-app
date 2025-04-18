@@ -17,6 +17,11 @@ export default function SignUpScreen() {
     router.push('/finish-signup');
   };
 
+  const handleSocialLogin = (provider: string) => {
+    // TODO: Implement social login logic
+    console.log('Social login with:', provider);
+  };
+
   return (
     <GradientBackground>
       <StatusBar style="light" />
@@ -55,17 +60,51 @@ export default function SignUpScreen() {
                   autoCapitalize="none"
                 />
               </View>
+
+              <TouchableOpacity 
+                style={styles.signUpButton}
+                onPress={handleSignUp}
+              >
+                <Text style={styles.signUpButtonText}>Continue</Text>
+              </TouchableOpacity>
+
+              <View style={styles.separatorContainer}>
+                <View style={styles.separator} />
+                <Text style={styles.separatorText}>OR</Text>
+                <View style={styles.separator} />
+              </View>
+
+              <View style={styles.socialButtons}>
+                <TouchableOpacity 
+                  style={[styles.socialButton, styles.googleButton]}
+                  onPress={() => handleSocialLogin('google')}
+                >
+                  <Ionicons name="logo-google" size={24} color="#fff" />
+                  <Text style={styles.socialButtonText}>Continue with Google</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={[styles.socialButton, styles.facebookButton]}
+                  onPress={() => handleSocialLogin('facebook')}
+                >
+                  <Ionicons name="logo-facebook" size={24} color="#fff" />
+                  <Text style={styles.socialButtonText}>Continue with Facebook</Text>
+                </TouchableOpacity>
+
+                {Platform.OS === 'ios' && (
+                  <TouchableOpacity 
+                    style={[styles.socialButton, styles.appleButton]}
+                    onPress={() => handleSocialLogin('apple')}
+                  >
+                    <Ionicons name="logo-apple" size={24} color="#fff" />
+                    <Text style={styles.socialButtonText}>Continue with Apple</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </ScrollView>
 
           <View style={styles.footer}>
-            <TouchableOpacity 
-              style={styles.signUpButton}
-              onPress={handleSignUp}
-            >
-              <Text style={styles.signUpButtonText}>Continue</Text>
-            </TouchableOpacity>
-
             <View style={styles.loginPrompt}>
               <Text style={styles.loginText}>Already have an account?</Text>
               <TouchableOpacity onPress={() => router.push('/login')}>
@@ -129,28 +168,70 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  separatorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  separator: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  separatorText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    paddingHorizontal: 10,
+    fontSize: 14,
+  },
+  socialButtons: {
+    gap: 12,
+  },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    gap: 12,
+  },
+  googleButton: {
+    backgroundColor: '#DB4437',
+  },
+  facebookButton: {
+    backgroundColor: '#4267B2',
+  },
+  appleButton: {
+    backgroundColor: '#000',
+  },
+  socialButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+    flex: 1,
+    textAlign: 'center',
   },
   signUpButton: {
     backgroundColor: '#FF8C00',
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 16,
   },
   signUpButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
+  footer: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
   loginPrompt: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 16,
     gap: 8,
   },
   loginText: {
