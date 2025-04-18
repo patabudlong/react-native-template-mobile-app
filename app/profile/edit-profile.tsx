@@ -105,7 +105,11 @@ export default function EditProfileScreen() {
       setUser({
         ...user,
         ...formData,
-        full_name: `${formData.first_name} ${formData.middle_name ? formData.middle_name + ' ' : ''}${formData.last_name}${formData.extension_name ? ' ' + formData.extension_name : ''}`
+        full_name: `${formData.first_name} ${
+          formData.middle_name ? formData.middle_name.charAt(0) + '. ' : ''
+        }${formData.last_name}${
+          formData.extension_name ? ' ' + formData.extension_name : ''
+        }`
       });
 
       setAlertConfig({

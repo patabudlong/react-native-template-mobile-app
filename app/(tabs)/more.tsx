@@ -6,12 +6,26 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useUser } from '../../contexts/UserContext';
 
+interface UserDetails {
+  id: string;
+  email: string;
+  username: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  extension_name: string;
+  full_name: string;
+}
+
 const MAX_NAME_LENGTH = 20;
 
-const formatName = (name: string | undefined) => {
-  if (!name) return 'Guest';
-  if (name.length <= MAX_NAME_LENGTH) return name;
-  return `${name.substring(0, MAX_NAME_LENGTH)}...`;
+const formatName = (user: UserDetails | null) => {
+  if (!user?.first_name) return 'Guest';
+  
+  const fullName = `${user.first_name} ${user.last_name}${user.middle_name ? ` ${user.middle_name.charAt(0)}.` : ''}`;
+  
+  if (fullName.length <= MAX_NAME_LENGTH) return fullName;
+  return `${fullName.substring(0, MAX_NAME_LENGTH)}...`;
 };
 
 export default function MoreScreen() {
@@ -65,7 +79,7 @@ export default function MoreScreen() {
               </TouchableOpacity>
               <View style={styles.profileInfo}>
                 <Text style={styles.fullName}>
-                  {formatName(user?.full_name)}
+                  {formatName(user)}
                 </Text>
                 <Text style={styles.email}>{user?.email || 'No email'}</Text>
               </View>

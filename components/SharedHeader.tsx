@@ -98,9 +98,9 @@ export function SharedHeader() {
             >
               {loading 
                 ? 'Loading...' 
-                : user?.full_name && user.full_name.length > 15
-                  ? `${user.full_name.slice(0, 20)}...`
-                  : user?.full_name || 'Guest'
+                : user?.first_name
+                  ? `${(user.first_name + ' ' + user.last_name + (user.middle_name ? ` ${user.middle_name.charAt(0)}.` : '')).slice(0, 20)}${(user.first_name + ' ' + user.last_name + (user.middle_name ? ` ${user.middle_name.charAt(0)}.` : '')).length > 20 ? '...' : ''}`
+                  : 'Guest'
               }
             </Text>
           </View>
