@@ -53,7 +53,11 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
+      Alert.alert(
+        'Missing Information',
+        'Please enter both email and password',
+        [{ text: 'OK' }]
+      );
       return;
     }
 
@@ -82,7 +86,8 @@ export default function LoginScreen() {
       console.error('Login failed:', error);
       Alert.alert(
         'Login Failed',
-        error instanceof Error ? error.message : 'Please check your credentials and try again'
+        'Incorrect email or password. Please try again.',
+        [{ text: 'OK' }]
       );
     } finally {
       setIsLoading(false);
