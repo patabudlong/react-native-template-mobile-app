@@ -45,82 +45,84 @@ export default function MoreScreen() {
 
   return (
     <GradientBackground>
-      <ScrollView style={styles.container}>
-        <View style={styles.topSection}>
-          <View style={styles.profileRow}>
-            <TouchableOpacity 
-              style={styles.profileImageWrapper}
-              onPress={handleProfilePhotoChange}
-            >
-              <View style={styles.profileImageContainer}>
-                <Image
-                  source={profileImage}
-                  style={styles.profileImage}
-                />
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.topSection}>
+            <View style={styles.profileRow}>
+              <TouchableOpacity 
+                style={styles.profileImageWrapper}
+                onPress={handleProfilePhotoChange}
+              >
+                <View style={styles.profileImageContainer}>
+                  <Image
+                    source={profileImage}
+                    style={styles.profileImage}
+                  />
+                </View>
+                <View style={styles.cameraIconContainer}>
+                  <Ionicons name="camera" size={20} color="#fff" />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.profileInfo}>
+                <Text style={styles.fullName}>
+                  {formatName(user?.full_name)}
+                </Text>
+                <Text style={styles.email}>{user?.email || 'No email'}</Text>
               </View>
-              <View style={styles.cameraIconContainer}>
-                <Ionicons name="camera" size={20} color="#fff" />
-              </View>
-            </TouchableOpacity>
-            <View style={styles.profileInfo}>
-              <Text style={styles.fullName}>
-                {formatName(user?.full_name)}
-              </Text>
-              <Text style={styles.email}>{user?.email || 'No email'}</Text>
             </View>
           </View>
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Coming Soon', 'Profile editing is under development')}
-          >
-            <Ionicons name="person-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Edit Profile</Text>
-            <Ionicons name="chevron-forward" size={24} color="#fff" />
-          </TouchableOpacity>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Account Settings</Text>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => Alert.alert('Coming Soon', 'Profile editing is under development')}
+            >
+              <Ionicons name="person-outline" size={24} color="#fff" />
+              <Text style={styles.menuItemText}>Edit Profile</Text>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Coming Soon', 'Password change is under development')}
-          >
-            <Ionicons name="lock-closed-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Change Password</Text>
-            <Ionicons name="chevron-forward" size={24} color="#fff" />
-          </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => Alert.alert('Coming Soon', 'Password change is under development')}
+            >
+              <Ionicons name="lock-closed-outline" size={24} color="#fff" />
+              <Text style={styles.menuItemText}>Change Password</Text>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Coming Soon', 'Notification settings are under development')}
-          >
-            <Ionicons name="notifications-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Notifications</Text>
-            <Ionicons name="chevron-forward" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => Alert.alert('Coming Soon', 'Notification settings are under development')}
+            >
+              <Ionicons name="notifications-outline" size={24} color="#fff" />
+              <Text style={styles.menuItemText}>Notifications</Text>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Support</Text>
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Coming Soon', 'Help center is under development')}
-          >
-            <Ionicons name="help-circle-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Help Center</Text>
-            <Ionicons name="chevron-forward" size={24} color="#fff" />
-          </TouchableOpacity>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Support</Text>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => Alert.alert('Coming Soon', 'Help center is under development')}
+            >
+              <Ionicons name="help-circle-outline" size={24} color="#fff" />
+              <Text style={styles.menuItemText}>Help Center</Text>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => Alert.alert('Coming Soon', 'Privacy settings are under development')}
-          >
-            <Ionicons name="shield-outline" size={24} color="#fff" />
-            <Text style={styles.menuItemText}>Privacy</Text>
-            <Ionicons name="chevron-forward" size={24} color="#fff" />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => Alert.alert('Coming Soon', 'Privacy settings are under development')}
+            >
+              <Ionicons name="shield-outline" size={24} color="#fff" />
+              <Text style={styles.menuItemText}>Privacy</Text>
+              <Ionicons name="chevron-forward" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
 
         <TouchableOpacity 
           style={styles.logoutButton}
@@ -144,13 +146,16 @@ export default function MoreScreen() {
         >
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   topSection: {
@@ -230,7 +235,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 20,
     marginHorizontal: 20,
     marginBottom: 20,
     borderWidth: 1.5,
