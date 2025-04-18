@@ -85,7 +85,7 @@ export default function MoreScreen() {
 
             <TouchableOpacity 
               style={styles.menuItem}
-              onPress={() => Alert.alert('Coming Soon', 'Password change is under development')}
+              onPress={() => router.push('/profile/change-password')}
             >
               <Ionicons name="lock-closed-outline" size={24} color="#fff" />
               <Text style={styles.menuItemText}>Change Password</Text>
