@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useUser } from '../../contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,47 @@ import { StatusBar } from 'expo-status-bar';
 export default function EditProfileScreen() {
   const { user } = useUser();
   const router = useRouter();
+  
+  const [formData, setFormData] = useState({
+    username: user?.username || '',
+    first_name: user?.first_name || '',
+    middle_name: user?.middle_name || '',
+    last_name: user?.last_name || '',
+  });
+
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const isChanged = 
+      formData.username !== (user?.username || '') ||
+      formData.first_name !== (user?.first_name || '') ||
+      formData.middle_name !== (user?.middle_name || '') ||
+      formData.last_name !== (user?.last_name || '');
+    
+    setHasChanges(isChanged);
+  }, [formData]);
+
+  const handleBack = () => {
+    if (hasChanges) {
+      Alert.alert(
+        'Discard Changes',
+        'You have unsaved changes. Are you sure you want to leave?',
+        [
+          {
+            text: 'Stay',
+            style: 'cancel',
+          },
+          {
+            text: 'Leave',
+            style: 'destructive',
+            onPress: () => router.back(),
+          },
+        ]
+      );
+    } else {
+      router.back();
+    }
+  };
 
   return (
     <GradientBackground>
@@ -16,17 +57,87 @@ export default function EditProfileScreen() {
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity 
-            onPress={() => router.back()}
+            onPress={handleBack}
             style={styles.backButton}
           >
             <Ionicons name="arrow-back" size={24} color="#fff" />
           </TouchableOpacity>
           <Text style={styles.title}>Edit Profile</Text>
-          <View style={styles.placeholder} />
         </View>
 
         <View style={styles.content}>
-          {/* Content will go here */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={user?.email}
+              editable={false}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.username}
+              onChangeText={(text) => setFormData({ ...formData, username: text })}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Enter username"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>First Name</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.first_name}
+              onChangeText={(text) => setFormData({ ...formData, first_name: text })}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Enter first name"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Middle Name</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.middle_name}
+              onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Enter middle name"
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Last Name</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.last_name}
+              onChangeText={(text) => setFormData({ ...formData, last_name: text })}
+              placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              placeholder="Enter last name"
+            />
+          </View>
+
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity 
+              style={[styles.button, styles.cancelButton]}
+              onPress={handleBack}
+            >
+              <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.button, styles.updateButton]}
+              onPress={() => {
+                // TODO: Implement update logic
+                console.log('Update profile', formData);
+              }}
+            >
+              <Text style={styles.buttonText}>Update Profile</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </GradientBackground>
@@ -40,7 +151,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 20,
@@ -50,17 +160,60 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 8,
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
     color: '#fff',
-  },
-  placeholder: {
-    width: 40, // Same width as backButton for centering title
+    flex: 1,
   },
   content: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 8,
+    padding: 12,
+    color: '#fff',
+    fontSize: 16,
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 32,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  cancelButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  cancelButtonText: {
+    color: '#fff',
+  },
+  updateButton: {
+    backgroundColor: '#FF8C00',
+  },
+  updateButtonText: {
+    color: '#fff',
   },
 }); 
