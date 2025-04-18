@@ -2,8 +2,13 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface UserDetails {
   id: string;
-  full_name: string;
+  username: string;
   email: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  extension_name: string;
+  full_name: string;
   // add other fields as needed
 }
 

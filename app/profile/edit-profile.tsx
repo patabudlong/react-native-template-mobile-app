@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useUser } from '../../contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+
+interface UserDetails {
+  id: string;
+  username: string;
+  email: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  extension_name: string;
+  full_name: string;
+}
 
 export default function EditProfileScreen() {
   const { user } = useUser();
@@ -15,6 +26,7 @@ export default function EditProfileScreen() {
     first_name: user?.first_name || '',
     middle_name: user?.middle_name || '',
     last_name: user?.last_name || '',
+    extension_name: user?.extension_name || '',
   });
 
   const [hasChanges, setHasChanges] = useState(false);
@@ -24,7 +36,8 @@ export default function EditProfileScreen() {
       formData.username !== (user?.username || '') ||
       formData.first_name !== (user?.first_name || '') ||
       formData.middle_name !== (user?.middle_name || '') ||
-      formData.last_name !== (user?.last_name || '');
+      formData.last_name !== (user?.last_name || '') ||
+      formData.extension_name !== (user?.extension_name || '');
     
     setHasChanges(isChanged);
   }, [formData]);
@@ -54,7 +67,10 @@ export default function EditProfileScreen() {
   return (
     <GradientBackground>
       <StatusBar style="light" />
-      <View style={styles.container}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
         <View style={styles.header}>
           <TouchableOpacity 
             onPress={handleBack}
@@ -65,81 +81,108 @@ export default function EditProfileScreen() {
           <Text style={styles.title}>Edit Profile</Text>
         </View>
 
-        <View style={styles.content}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              value={user?.email}
-              editable={false}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-            />
-          </View>
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.content}>
+            <View style={styles.inputGroup}>
+              <View style={styles.labelContainer}>
+                <Text style={styles.label}>Email</Text>
+                <TouchableOpacity
+                  onPress={() => Alert.alert(
+                    'Email',
+                    'Email address cannot be changed. Please contact support if you need to update your email.'
+                  )}
+                >
+                  <Ionicons name="information-circle-outline" size={20} color="rgba(255, 255, 255, 0.8)" />
+                </TouchableOpacity>
+              </View>
+              <TextInput
+                style={[styles.input, { opacity: 0.7 }]}
+                value={user?.email}
+                editable={false}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+              />
+            </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Username</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.username}
-              onChangeText={(text) => setFormData({ ...formData, username: text })}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Enter username"
-            />
-          </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Username</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.username}
+                onChangeText={(text) => setFormData({ ...formData, username: text })}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                placeholder="Enter username"
+              />
+            </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>First Name</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.first_name}
-              onChangeText={(text) => setFormData({ ...formData, first_name: text })}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Enter first name"
-            />
-          </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>First Name</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.first_name}
+                onChangeText={(text) => setFormData({ ...formData, first_name: text })}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                placeholder="Enter first name"
+              />
+            </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Middle Name</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.middle_name}
-              onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Enter middle name"
-            />
-          </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Middle Name</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.middle_name}
+                onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                placeholder="Enter middle name"
+              />
+            </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Last Name</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.last_name}
-              onChangeText={(text) => setFormData({ ...formData, last_name: text })}
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              placeholder="Enter last name"
-            />
-          </View>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Last Name</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.last_name}
+                onChangeText={(text) => setFormData({ ...formData, last_name: text })}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                placeholder="Enter last name"
+              />
+            </View>
 
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity 
-              style={[styles.button, styles.cancelButton]}
-              onPress={handleBack}
-            >
-              <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[styles.button, styles.updateButton]}
-              onPress={() => {
-                // TODO: Implement update logic
-                console.log('Update profile', formData);
-              }}
-            >
-              <Text style={styles.buttonText}>Update Profile</Text>
-            </TouchableOpacity>
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Extension Name</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.extension_name}
+                onChangeText={(text) => setFormData({ ...formData, extension_name: text })}
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                placeholder="E.g., Jr., Sr., III"
+              />
+            </View>
           </View>
+        </ScrollView>
+
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity 
+            style={[styles.button, styles.cancelButton]}
+            onPress={handleBack}
+          >
+            <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.button, styles.updateButton]}
+            onPress={() => {
+              // TODO: Implement update logic
+              console.log('Update profile', formData);
+            }}
+          >
+            <Text style={styles.buttonText}>Update Profile</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </GradientBackground>
   );
 }
@@ -155,18 +198,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 20,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#fff',
+  scrollView: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,
@@ -175,10 +211,15 @@ const styles = StyleSheet.create({
   inputGroup: {
     marginBottom: 20,
   },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
   label: {
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
-    marginBottom: 8,
   },
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -190,7 +231,11 @@ const styles = StyleSheet.create({
   buttonGroup: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 32,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   button: {
     flex: 1,
@@ -215,5 +260,18 @@ const styles = StyleSheet.create({
   },
   updateButtonText: {
     color: '#fff',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginLeft: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
   },
 }); 
