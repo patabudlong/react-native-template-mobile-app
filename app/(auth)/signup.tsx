@@ -9,21 +9,12 @@ export default function SignUpScreen() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
-    username: '',
-    first_name: '',
-    middle_name: '',
-    last_name: '',
-    extension_name: '',
-    password: '',
-    confirm_password: '',
   });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSignUp = () => {
     // TODO: Implement signup logic
     console.log('Sign up:', formData);
+    router.push('/finish-signup');
   };
 
   return (
@@ -64,110 +55,6 @@ export default function SignUpScreen() {
                   autoCapitalize="none"
                 />
               </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Username</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.username}
-                  onChangeText={(text) => setFormData({ ...formData, username: text })}
-                  placeholder="Choose a username"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                  autoCapitalize="none"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>First Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.first_name}
-                  onChangeText={(text) => setFormData({ ...formData, first_name: text })}
-                  placeholder="Enter your first name"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Middle Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.middle_name}
-                  onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
-                  placeholder="Enter your middle name"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Last Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.last_name}
-                  onChangeText={(text) => setFormData({ ...formData, last_name: text })}
-                  placeholder="Enter your last name"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Extension Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.extension_name}
-                  onChangeText={(text) => setFormData({ ...formData, extension_name: text })}
-                  placeholder="E.g., Jr., Sr., III (optional)"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={formData.password}
-                    onChangeText={(text) => setFormData({ ...formData, password: text })}
-                    placeholder="Create a password"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                    secureTextEntry={!showPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setShowPassword(!showPassword)}
-                  >
-                    <Ionicons 
-                      name={showPassword ? "eye-off-outline" : "eye-outline"} 
-                      size={24} 
-                      color="rgba(255, 255, 255, 0.7)" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Confirm Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={formData.confirm_password}
-                    onChangeText={(text) => setFormData({ ...formData, confirm_password: text })}
-                    placeholder="Confirm your password"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                    secureTextEntry={!showConfirmPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <Ionicons 
-                      name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} 
-                      size={24} 
-                      color="rgba(255, 255, 255, 0.7)" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
             </View>
           </ScrollView>
 
@@ -176,7 +63,7 @@ export default function SignUpScreen() {
               style={styles.signUpButton}
               onPress={handleSignUp}
             >
-              <Text style={styles.signUpButtonText}>Create Account</Text>
+              <Text style={styles.signUpButtonText}>Continue</Text>
             </TouchableOpacity>
 
             <View style={styles.loginPrompt}>
@@ -241,21 +128,6 @@ const styles = StyleSheet.create({
     padding: 12,
     color: '#fff',
     fontSize: 16,
-  },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-  },
-  passwordInput: {
-    flex: 1,
-    padding: 12,
-    color: '#fff',
-    fontSize: 16,
-  },
-  eyeIcon: {
-    padding: 12,
   },
   footer: {
     padding: 20,
