@@ -183,11 +183,9 @@ export default function LoginScreen() {
             style={styles.passwordToggle}
             onPress={() => setShowPassword(!showPassword)}
           >
-            <Ionicons 
-              name={showPassword ? "eye-off" : "eye"} 
-              size={24} 
-              color="rgba(255, 255, 255, 0.7)"
-            />
+            <Text style={styles.passwordToggleText}>
+              {showPassword ? 'Hide' : 'Show'}
+            </Text>
           </Pressable>
         </View>
 
@@ -292,14 +290,17 @@ const styles = StyleSheet.create({
     top: 16,
     zIndex: 1,
   },
+  passwordToggleText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   button: {
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: '#FF8C00',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 5,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   buttonText: {
     color: '#fff',
