@@ -87,8 +87,17 @@ export function SharedHeader() {
           </View>
           <View style={styles.profileInfo}>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.userName}>
-              {loading ? 'Loading...' : user?.full_name || 'Guest'}
+            <Text 
+              style={styles.userName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {loading 
+                ? 'Loading...' 
+                : user?.full_name && user.full_name.length > 15
+                  ? `${user.full_name.slice(0, 20)}...`
+                  : user?.full_name || 'Guest'
+              }
             </Text>
           </View>
         </View>

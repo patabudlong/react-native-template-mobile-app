@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-import { API_URL } from '../config/environment';
 import { authService } from './authService';
 
 // Use single URL for API
