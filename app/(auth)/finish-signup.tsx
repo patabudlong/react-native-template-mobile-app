@@ -5,6 +5,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { PolicyModal } from '../../components/PolicyModal';
+import { api } from '../../services/apiService';
 
 export default function FinishSignUpScreen() {
   const params = useLocalSearchParams();
@@ -92,7 +93,7 @@ We do not sell or share your personal information with third parties except as d
     return { isValid: true, message: '' };
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     console.log('Form data with email:', formData);
     
     if (!formData.first_name || !formData.last_name || !formData.password) {
@@ -104,6 +105,37 @@ We do not sell or share your personal information with third parties except as d
     if (!passwordValidation.isValid) {
       Alert.alert('Invalid Password', passwordValidation.message);
       return;
+    }
+
+    try {
+      const registerData = {
+        email: formData.email,
+        password: formData.password,
+        first_name: formData.first_name,
+        middle_name: formData.middle_name || undefined,
+        last_name: formData.last_name,
+        extension_name: formData.extension_name || undefined,
+      };
+
+      const response = await api.register(registerData);
+      
+      if (response.error) {
+        Alert.alert('Registration Failed', response.error);
+        return;
+      }
+
+      Alert.alert(
+        'Registration Successful',
+        'Your account has been created successfully. Please login to continue.',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/login')
+          }
+        ]
+      );
+    } catch (error) {
+      Alert.alert('Error', 'Failed to register. Please try again.');
     }
   };
 

@@ -140,19 +140,25 @@ export const api = {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          middle_name: data.middle_name || "",
+          extension_name: data.extension_name || "",
+          password: data.password.trim()  // Ensure no whitespace
+        }),
       });
 
+      const responseText = await response.text();
+      console.log('Register response:', responseText);
+
       if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        return { error: 'Registration failed' };
       }
 
-      const responseData = await response.json();
-      return { data: responseData };
+      return { data: JSON.parse(responseText) };
     } catch (error) {
-      return { 
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
+      console.error('Register error:', error);
+      return { error: 'Registration failed' };
     }
   }
 }; 
