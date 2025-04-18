@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Modal, View, ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Stack } from 'expo-router';
 import { api } from '../services/apiService';
+import { UserProvider } from '../contexts/UserContext';
 
 export default function RootLayout() {
   const [showSpinner, setShowSpinner] = useState(true);
@@ -28,7 +29,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <>
+    <UserProvider>
       <Stack screenOptions={{ headerShown: false }} />
       
       {/* Loading Spinner */}
@@ -63,7 +64,7 @@ export default function RootLayout() {
           </View>
         </View>
       </Modal>
-    </>
+    </UserProvider>
   );
 }
 

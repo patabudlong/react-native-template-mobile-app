@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { authService } from './authService';
 
 // Use single URL for API
 const baseUrl = 'http://192.168.1.8:8001';
@@ -11,21 +11,31 @@ interface ApiResponse<T> {
 }
 
 export const api = {
-  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
+  async get<T>(endpoint: string, requiresAuth: boolean = false): Promise<ApiResponse<T>> {
     try {
       const url = `${baseUrl}${endpoint}`;
       console.log('Making GET request to:', url);
       
+      const headers: HeadersInit = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      };
+
+      if (requiresAuth) {
+        const token = await authService.getToken();
+        if (!token) throw new Error('No auth token available');
+        headers['Authorization'] = `Bearer ${token}`;
+        console.log('Using auth token:', token);
+      }
+
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
+        headers,
       });
 
       const textResponse = await response.text();
       console.log('Raw response:', textResponse);
+      console.log('Response status:', response.status);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} - ${textResponse}`);
@@ -45,7 +55,6 @@ export const api = {
     try {
       const url = `${baseUrl}${endpoint}`;
       console.log('Making POST request to:', url);
-      console.log('Request body:', JSON.stringify(body, null, 2));
       
       const formData = new URLSearchParams();
       Object.entries(body).forEach(([key, value]) => {
@@ -68,7 +77,6 @@ export const api = {
       const textResponse = await response.text();
       console.log('Raw response:', textResponse);
       console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} - ${textResponse}`);
