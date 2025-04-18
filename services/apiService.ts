@@ -8,6 +8,15 @@ interface ApiResponse<T> {
   error?: string;
 }
 
+interface RegisterData {
+  email: string;
+  password: string;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  extension_name?: string;
+}
+
 export const api = {
   async get<T>(endpoint: string, requiresAuth: boolean = false): Promise<ApiResponse<T>> {
     try {
@@ -115,6 +124,32 @@ export const api = {
       return { data };
     } catch (error) {
       console.error('API request failed:', error);
+      return { 
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  },
+
+  async register(data: RegisterData): Promise<ApiResponse<{ message: string }>> {
+    try {
+      const url = `${baseUrl}/users/register`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      return { data: responseData };
+    } catch (error) {
       return { 
         error: error instanceof Error ? error.message : 'Unknown error'
       };

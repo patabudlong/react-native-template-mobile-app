@@ -68,11 +68,41 @@ We implement security measures to protect your personal information.
 
 We do not sell or share your personal information with third parties except as described in this policy.`;
 
+  const validatePassword = (password: string): { isValid: boolean; message: string } => {
+    if (password.length < 8) {
+      return { isValid: false, message: 'Password must be at least 8 characters long' };
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      return { isValid: false, message: 'Password must contain at least one lowercase letter' };
+    }
+    
+    if (!/[0-9]/.test(password)) {
+      return { isValid: false, message: 'Password must contain at least one number' };
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return { isValid: false, message: 'Password must contain at least one special character' };
+    }
+
+    return { isValid: true, message: '' };
+  };
+
   const handleFinish = () => {
     console.log('Form data with email:', formData);
     
     if (!formData.first_name || !formData.last_name || !formData.password) {
       Alert.alert('Missing Information', 'Please fill in all required fields');
+      return;
+    }
+
+    const passwordValidation = validatePassword(formData.password);
+    if (!passwordValidation.isValid) {
+      Alert.alert('Invalid Password', passwordValidation.message);
       return;
     }
   };
