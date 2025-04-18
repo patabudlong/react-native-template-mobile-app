@@ -4,6 +4,7 @@ import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { PolicyModal } from '../../components/PolicyModal';
 
 export default function FinishSignUpScreen() {
   const router = useRouter();
@@ -16,6 +17,53 @@ export default function FinishSignUpScreen() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
+  const termsContent = `
+1. Acceptance of Terms
+
+By accessing and using our application, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you may not use our services.
+
+2. User Registration
+
+Users must provide accurate and complete information during registration. You are responsible for maintaining the confidentiality of your account credentials.
+
+3. User Conduct
+
+Users agree to:
+- Use the service legally and appropriately
+- Not engage in harmful or malicious activities
+- Respect other users' privacy and rights
+
+4. Service Modifications
+
+We reserve the right to modify or discontinue any part of our service at any time.`;
+
+  const privacyContent = `
+Privacy Policy
+
+1. Information Collection
+
+We collect information that you provide directly to us, including:
+- Personal information (name, email)
+- Usage data
+- Device information
+
+2. Information Usage
+
+We use collected information to:
+- Provide and maintain our services
+- Improve user experience
+- Send important notifications
+
+3. Data Protection
+
+We implement security measures to protect your personal information.
+
+4. Information Sharing
+
+We do not sell or share your personal information with third parties except as described in this policy.`;
 
   const handleFinish = () => {
     // TODO: Implement finish signup logic
@@ -115,14 +163,14 @@ export default function FinishSignUpScreen() {
                 By signing up, you agree to our{' '}
                 <Text 
                   style={styles.agreementLink}
-                  onPress={() => router.push('/terms')}
+                  onPress={() => setShowTerms(true)}
                 >
                   Terms & Conditions
                 </Text>
                 {' '}and{' '}
                 <Text 
                   style={styles.agreementLink}
-                  onPress={() => router.push('/privacy')}
+                  onPress={() => setShowPrivacy(true)}
                 >
                   Privacy Policy
                 </Text>
@@ -140,6 +188,20 @@ export default function FinishSignUpScreen() {
           </View>
         </KeyboardAvoidingView>
       </View>
+
+      <PolicyModal
+        isVisible={showTerms}
+        onClose={() => setShowTerms(false)}
+        title="Terms & Conditions"
+        content={termsContent}
+      />
+
+      <PolicyModal
+        isVisible={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
+        title="Privacy Policy"
+        content={privacyContent}
+      />
     </GradientBackground>
   );
 }
