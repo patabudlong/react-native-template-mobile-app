@@ -3,9 +3,13 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Animated, P
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter, useNavigation } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '../../services/apiService';
+import { authService } from '../../services/authService';
 
-const DEFAULT_EMAIL = 'test@test.com';
-const DEFAULT_PASSWORD = 'pass';
+interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -14,6 +18,7 @@ export default function LoginScreen() {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
 
@@ -46,15 +51,41 @@ export default function LoginScreen() {
     return unsubscribe;
   }, [navigation]);
 
-  const handleLogin = () => {
-    if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
-      router.replace('/(tabs)/home');
-    } else {
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const requestBody = {
+        username: email.trim().toLowerCase(),  // Send email as username
+        password: password.trim()
+      };
+      console.log('Login request body:', requestBody);
+
+      const response = await api.post<LoginResponse>('/auth/login', requestBody);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      if (response.data?.access_token) {
+        await authService.saveToken(response.data.access_token);
+        console.log('Login successful, token saved');
+        router.replace('/(tabs)/home');
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
       Alert.alert(
         'Login Failed',
-        'Invalid email or password. Please try again.',
-        [{ text: 'OK' }]
+        error instanceof Error ? error.message : 'Please check your credentials and try again'
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,11 +132,11 @@ export default function LoginScreen() {
               opacity: isEmailFocused || email ? 1 : 0,
             }
           ]}>
-            Email or Username
+            Email
           </Text>
           <TextInput
             style={styles.input}
-            placeholder={isEmailFocused || email ? '' : 'Email or Username'}
+            placeholder={isEmailFocused || email ? '' : 'Email'}
             placeholderTextColor="rgba(255, 255, 255, 0.7)"
             value={email}
             onChangeText={setEmail}
@@ -114,8 +145,8 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             selectionColor="#fff"
-            textContentType="username"
-            autoComplete="username"
+            textContentType="emailAddress"
+            autoComplete="email"
           />
         </View>
         
@@ -168,10 +199,13 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={styles.button}
+          style={[styles.button, isLoading && styles.buttonDisabled]}
           onPress={handleLogin}
+          disabled={isLoading}
         >
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.signUpContainer}>
@@ -341,4 +375,7 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.5)',
     fontSize: 12,
   },
+  buttonDisabled: {
+    opacity: 0.7,
+  }
 }); 
