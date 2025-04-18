@@ -34,8 +34,12 @@ export default function EditProfileScreen() {
   const [hasChanges, setHasChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertConfig, setAlertConfig] = useState({
-    type: 'success' as const,
+  const [alertConfig, setAlertConfig] = useState<{
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+  }>({
+    type: 'success',
     title: '',
     message: ''
   });
