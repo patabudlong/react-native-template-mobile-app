@@ -1,8 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '../services/apiService';
+import { useUser } from '../contexts/UserContext';
+import { authService } from '../services/authService';
+import { jwtDecode } from "jwt-decode";
+
+interface UserDetails {
+  id: string;
+  full_name: string;
+  email: string;
+  // add other fields as needed
+}
+
+interface JwtPayload {
+  user_id: string;  // Changed to user_id
+  exp: number;
+  // add other claims as needed
+}
 
 export function SharedHeader() {
+  const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        // Get the saved token
+        const token = await authService.getToken();
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+
+        // Decode the token to get user_id
+        const decoded = jwtDecode<JwtPayload>(token);
+        console.log('Decoded token:', decoded);
+        
+        const userId = decoded.user_id;
+        if (!userId) {
+          throw new Error('No user_id found in token');
+        }
+
+        console.log('Fetching details for user_id:', userId);
+
+        // Make the API call with the user_id
+        const response = await api.get<UserDetails>(`/auth/users/${userId}`, true);
+        console.log('User details response:', response);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        if (response.data) {
+          setUser(response.data);
+          console.log('User details stored:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
   const handleInbox = () => {
     console.log('Inbox pressed');
   };
@@ -24,7 +87,9 @@ export function SharedHeader() {
           </View>
           <View style={styles.profileInfo}>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.userName}>John Doe</Text>
+            <Text style={styles.userName}>
+              {loading ? 'Loading...' : user?.full_name || 'Guest'}
+            </Text>
           </View>
         </View>
         
