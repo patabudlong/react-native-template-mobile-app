@@ -336,15 +336,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 20,
   },
   signUpText: {
     color: 'rgba(255, 255, 255, 0.7)',
-    fontSize: 14,
+    fontSize: 16,
   },
   signUpLink: {
-    color: '#fff',
-    fontSize: 14,
+    color: '#FF8C00',
+    fontSize: 16,
     fontWeight: '600',
   },
   biometricContainer: {
