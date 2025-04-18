@@ -44,19 +44,31 @@ export const api = {
   async post<T>(endpoint: string, body: any): Promise<ApiResponse<T>> {
     try {
       const url = `${baseUrl}${endpoint}`;
-      console.log('Making POST request to:', url, body);
+      console.log('Making POST request to:', url);
+      console.log('Request body:', JSON.stringify(body, null, 2));
+      
+      const formData = new URLSearchParams();
+      Object.entries(body).forEach(([key, value]) => {
+        if (value !== undefined) {
+          formData.append(key, value as string);
+        }
+      });
+      
+      console.log('Form data being sent:', formData.toString());
       
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(body),
+        body: formData.toString(),
       });
 
       const textResponse = await response.text();
       console.log('Raw response:', textResponse);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
 
       if (!response.ok) {
         throw new Error(`API error: ${response.status} - ${textResponse}`);
