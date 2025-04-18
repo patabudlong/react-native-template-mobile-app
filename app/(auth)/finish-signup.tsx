@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { PolicyModal } from '../../components/PolicyModal';
 
 export default function FinishSignUpScreen() {
+  const params = useLocalSearchParams();
+  const email = params.email as string;
   const router = useRouter();
   const [formData, setFormData] = useState({
     password: '',
@@ -92,12 +94,34 @@ We do not sell or share your personal information with third parties except as d
 
             <View style={styles.form}>
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>First Name</Text>
+                <Text style={styles.label}>Email</Text>
+                <View style={[styles.input, styles.emailContainer]}>
+                  <Text style={styles.emailText}>{email}</Text>
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                  First Name <Text style={styles.required}>(Required)</Text>
+                </Text>
                 <TextInput
                   style={styles.input}
                   value={formData.first_name}
                   onChangeText={(text) => setFormData({ ...formData, first_name: text })}
                   placeholder="Enter your first name"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>
+                  Last Name <Text style={styles.required}>(Required)</Text>
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.last_name}
+                  onChangeText={(text) => setFormData({ ...formData, last_name: text })}
+                  placeholder="Enter your last name"
                   placeholderTextColor="rgba(255, 255, 255, 0.5)"
                 />
               </View>
@@ -114,29 +138,20 @@ We do not sell or share your personal information with third parties except as d
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Last Name</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.last_name}
-                  onChangeText={(text) => setFormData({ ...formData, last_name: text })}
-                  placeholder="Enter your last name"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
                 <Text style={styles.label}>Extension Name</Text>
                 <TextInput
                   style={styles.input}
                   value={formData.extension_name}
                   onChangeText={(text) => setFormData({ ...formData, extension_name: text })}
-                  placeholder="E.g., Jr., Sr., III (optional)"
+                  placeholder="E.g., Jr., Sr., III"
                   placeholderTextColor="rgba(255, 255, 255, 0.5)"
                 />
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
+                <Text style={styles.label}>
+                  Password <Text style={styles.required}>(Required)</Text>
+                </Text>
                 <View style={styles.input}>
                   <TextInput
                     style={styles.passwordInput}
@@ -299,5 +314,18 @@ const styles = StyleSheet.create({
   agreementLink: {
     color: '#FF8C00',
     fontWeight: '600',
+  },
+  emailContainer: {
+    justifyContent: 'center',
+  },
+  emailText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 16,
+  },
+  required: {
+    color: 'rgba(255, 182, 182, 0.9)',
+    fontSize: 13,
+    fontStyle: 'italic',
+    fontWeight: '500',
   },
 }); 

@@ -32,9 +32,11 @@ export default function SignUpScreen() {
       return;
     }
 
-    // TODO: Implement signup logic
-    console.log('Sign up:', formData);
-    router.push('/finish-signup');
+    // Fix: Ensure email is properly passed
+    router.push({
+      pathname: '/finish-signup',
+      params: { email: formData.email }
+    });
   };
 
   const handleSocialLogin = (provider: string) => {
