@@ -76,7 +76,7 @@ export default function MoreScreen() {
             <Text style={styles.sectionTitle}>Account Settings</Text>
             <TouchableOpacity 
               style={styles.menuItem}
-              onPress={() => Alert.alert('Coming Soon', 'Profile editing is under development')}
+              onPress={() => router.push('/profile/edit-profile')}
             >
               <Ionicons name="person-outline" size={24} color="#fff" />
               <Text style={styles.menuItemText}>Edit Profile</Text>
