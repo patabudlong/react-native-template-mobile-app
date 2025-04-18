@@ -8,9 +8,13 @@ import { jwtDecode } from "jwt-decode";
 
 interface UserDetails {
   id: string;
-  full_name: string;
   email: string;
-  // add other fields as needed
+  username: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  extension_name: string;
+  full_name: string;
 }
 
 interface JwtPayload {
