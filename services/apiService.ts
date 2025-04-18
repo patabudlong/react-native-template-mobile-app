@@ -17,6 +17,14 @@ interface RegisterData {
   extension_name?: string;
 }
 
+interface UpdateUserData {
+  email?: string;
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  extension_name?: string;
+}
+
 export const api = {
   async get<T>(endpoint: string, requiresAuth: boolean = false): Promise<ApiResponse<T>> {
     try {
@@ -159,6 +167,39 @@ export const api = {
     } catch (error) {
       console.error('Register error:', error);
       return { error: 'Registration failed' };
+    }
+  },
+
+  async updateUser(userId: string, data: UpdateUserData): Promise<ApiResponse<{ message: string }>> {
+    try {
+      const url = `${baseUrl}/auth/users/${userId}`;
+      const token = await authService.getToken();
+      
+      if (!token) {
+        return { error: 'No auth token available' };
+      }
+      
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseText = await response.text();
+      console.log('Update user response:', responseText);
+
+      if (!response.ok) {
+        return { error: 'Failed to update user' };
+      }
+
+      return { data: JSON.parse(responseText) };
+    } catch (error) {
+      console.error('Update user error:', error);
+      return { error: 'Failed to update user' };
     }
   }
 }; 

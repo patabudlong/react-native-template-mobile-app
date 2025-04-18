@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useUser } from '../../contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { api } from '../../services/apiService';
+import { CustomAlert } from '../../components/CustomAlert';
 
 interface UserDetails {
   id: string;
@@ -30,6 +32,13 @@ export default function EditProfileScreen() {
   });
 
   const [hasChanges, setHasChanges] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState({
+    type: 'success' as const,
+    title: '',
+    message: ''
+  });
 
   useEffect(() => {
     const isChanged = 
@@ -61,6 +70,49 @@ export default function EditProfileScreen() {
       );
     } else {
       router.back();
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (!user?.id) {
+      setAlertConfig({
+        type: 'error',
+        title: 'Error',
+        message: 'User ID not found'
+      });
+      setShowAlert(true);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await api.updateUser(user.id, formData);
+      
+      if (response.error) {
+        setAlertConfig({
+          type: 'error',
+          title: 'Update Failed',
+          message: response.error
+        });
+        setShowAlert(true);
+        return;
+      }
+
+      setAlertConfig({
+        type: 'success',
+        title: 'Success',
+        message: 'Profile updated successfully'
+      });
+      setShowAlert(true);
+    } catch (error) {
+      setAlertConfig({
+        type: 'error',
+        title: 'Error',
+        message: 'Failed to update profile'
+      });
+      setShowAlert(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,13 +171,15 @@ export default function EditProfileScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>First Name</Text>
+              <Text style={styles.label}>
+                First Name <Text style={styles.required}>(Required)</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 value={formData.first_name}
                 onChangeText={(text) => setFormData({ ...formData, first_name: text })}
+                placeholder="Enter your first name"
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                placeholder="Enter first name"
               />
             </View>
 
@@ -141,13 +195,15 @@ export default function EditProfileScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Last Name</Text>
+              <Text style={styles.label}>
+                Last Name <Text style={styles.required}>(Required)</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 value={formData.last_name}
                 onChangeText={(text) => setFormData({ ...formData, last_name: text })}
+                placeholder="Enter your last name"
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                placeholder="Enter last name"
               />
             </View>
 
@@ -174,15 +230,29 @@ export default function EditProfileScreen() {
 
           <TouchableOpacity 
             style={[styles.button, styles.updateButton]}
-            onPress={() => {
-              // TODO: Implement update logic
-              console.log('Update profile', formData);
-            }}
+            onPress={handleUpdate}
+            disabled={isLoading}
           >
-            <Text style={styles.buttonText}>Update Profile</Text>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Update Profile</Text>
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <CustomAlert
+        visible={showAlert}
+        type={alertConfig.type}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onClose={() => {
+          setShowAlert(false);
+          if (alertConfig.type === 'success') {
+            router.back();
+          }
+        }}
+      />
     </GradientBackground>
   );
 }
@@ -273,5 +343,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
+  },
+  required: {
+    color: 'rgba(255, 182, 182, 0.9)',
+    fontSize: 13,
+    fontStyle: 'italic',
+    fontWeight: '500',
   },
 }); 
