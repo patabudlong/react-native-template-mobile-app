@@ -29,167 +29,174 @@ export default function SignUpScreen() {
   return (
     <GradientBackground>
       <StatusBar style="light" />
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView 
-          style={styles.scrollView}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
+      <View style={styles.container}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardView}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
-          <View style={styles.header}>
-            <TouchableOpacity 
-              onPress={() => router.back()}
-              style={styles.backButton}
-            >
-              <Ionicons name="arrow-back" size={24} color="#fff" />
-            </TouchableOpacity>
-            <Text style={styles.title}>Create Account</Text>
-          </View>
-
-          <View style={styles.form}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.email}
-                onChangeText={(text) => setFormData({ ...formData, email: text })}
-                placeholder="Enter your email"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Username</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.username}
-                onChangeText={(text) => setFormData({ ...formData, username: text })}
-                placeholder="Choose a username"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                autoCapitalize="none"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>First Name</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.first_name}
-                onChangeText={(text) => setFormData({ ...formData, first_name: text })}
-                placeholder="Enter your first name"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Middle Name</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.middle_name}
-                onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
-                placeholder="Enter your middle name"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Last Name</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.last_name}
-                onChangeText={(text) => setFormData({ ...formData, last_name: text })}
-                placeholder="Enter your last name"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Extension Name</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.extension_name}
-                onChangeText={(text) => setFormData({ ...formData, extension_name: text })}
-                placeholder="E.g., Jr., Sr., III (optional)"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.passwordContainer}>
-                <TextInput
-                  style={styles.passwordInput}
-                  value={formData.password}
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
-                  placeholder="Create a password"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons 
-                    name={showPassword ? "eye-off-outline" : "eye-outline"} 
-                    size={24} 
-                    color="rgba(255, 255, 255, 0.7)" 
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Confirm Password</Text>
-              <View style={styles.passwordContainer}>
-                <TextInput
-                  style={styles.passwordInput}
-                  value={formData.confirm_password}
-                  onChangeText={(text) => setFormData({ ...formData, confirm_password: text })}
-                  placeholder="Confirm your password"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                  secureTextEntry={!showConfirmPassword}
-                />
-                <TouchableOpacity
-                  style={styles.eyeIcon}
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <Ionicons 
-                    name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} 
-                    size={24} 
-                    color="rgba(255, 255, 255, 0.7)" 
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-
-        <View style={styles.footer}>
-          <TouchableOpacity 
-            style={styles.signUpButton}
-            onPress={handleSignUp}
+          <ScrollView 
+            style={styles.scrollView}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
           >
-            <Text style={styles.signUpButtonText}>Create Account</Text>
-          </TouchableOpacity>
+            <View style={styles.header}>
+              <TouchableOpacity 
+                onPress={() => router.back()}
+                style={styles.backButton}
+              >
+                <Ionicons name="arrow-back" size={24} color="#fff" />
+              </TouchableOpacity>
+              <Text style={styles.title}>Create Account</Text>
+            </View>
 
-          <View style={styles.loginPrompt}>
-            <Text style={styles.loginText}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => router.push('/login')}>
-              <Text style={styles.loginLink}>Log In</Text>
+            <View style={styles.form}>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.email}
+                  onChangeText={(text) => setFormData({ ...formData, email: text })}
+                  placeholder="Enter your email"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Username</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.username}
+                  onChangeText={(text) => setFormData({ ...formData, username: text })}
+                  placeholder="Choose a username"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  autoCapitalize="none"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>First Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.first_name}
+                  onChangeText={(text) => setFormData({ ...formData, first_name: text })}
+                  placeholder="Enter your first name"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Middle Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.middle_name}
+                  onChangeText={(text) => setFormData({ ...formData, middle_name: text })}
+                  placeholder="Enter your middle name"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Last Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.last_name}
+                  onChangeText={(text) => setFormData({ ...formData, last_name: text })}
+                  placeholder="Enter your last name"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Extension Name</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.extension_name}
+                  onChangeText={(text) => setFormData({ ...formData, extension_name: text })}
+                  placeholder="E.g., Jr., Sr., III (optional)"
+                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                />
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={formData.password}
+                    onChangeText={(text) => setFormData({ ...formData, password: text })}
+                    placeholder="Create a password"
+                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    secureTextEntry={!showPassword}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Ionicons 
+                      name={showPassword ? "eye-off-outline" : "eye-outline"} 
+                      size={24} 
+                      color="rgba(255, 255, 255, 0.7)" 
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Confirm Password</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={formData.confirm_password}
+                    onChangeText={(text) => setFormData({ ...formData, confirm_password: text })}
+                    placeholder="Confirm your password"
+                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    secureTextEntry={!showConfirmPassword}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeIcon}
+                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <Ionicons 
+                      name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} 
+                      size={24} 
+                      color="rgba(255, 255, 255, 0.7)" 
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+
+          <View style={styles.footer}>
+            <TouchableOpacity 
+              style={styles.signUpButton}
+              onPress={handleSignUp}
+            >
+              <Text style={styles.signUpButtonText}>Create Account</Text>
             </TouchableOpacity>
+
+            <View style={styles.loginPrompt}>
+              <Text style={styles.loginText}>Already have an account?</Text>
+              <TouchableOpacity onPress={() => router.push('/login')}>
+                <Text style={styles.loginLink}>Log In</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     </GradientBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   scrollView: {
