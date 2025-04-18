@@ -90,5 +90,37 @@ export const api = {
         error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
+  },
+
+  async checkEmail(email: string): Promise<ApiResponse<{ exists: boolean }>> {
+    try {
+      const url = `${baseUrl}/users/check-email`;
+      console.log('Making POST request to:', url);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const textResponse = await response.text();
+      console.log('Raw response:', textResponse);
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} - ${textResponse}`);
+      }
+
+      const data = JSON.parse(textResponse);
+      return { data };
+    } catch (error) {
+      console.error('API request failed:', error);
+      return { 
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
   }
 }; 

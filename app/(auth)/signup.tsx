@@ -4,6 +4,7 @@ import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { api } from '../../services/apiService';
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -11,32 +12,39 @@ export default function SignUpScreen() {
     email: '',
   });
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     if (!formData.email) {
-      Alert.alert(
-        'Missing Information',
-        'Please enter your email address',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Missing Information', 'Please enter your email address');
       return;
     }
 
     if (!emailRegex.test(formData.email)) {
-      Alert.alert(
-        'Invalid Email',
-        'Please enter a valid email address',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Invalid Email', 'Please enter a valid email address');
       return;
     }
 
-    // Fix: Ensure email is properly passed
-    router.push({
-      pathname: '/finish-signup',
-      params: { email: formData.email }
-    });
+    try {
+      const response = await api.checkEmail(formData.email);
+      
+      if (response.error) {
+        Alert.alert('Error', 'Unable to verify email. Please try again.');
+        return;
+      }
+
+      if (response.data?.exists) {
+        Alert.alert('Email Already Exists', 'This email is already registered. Please use a different email or try logging in.');
+        return;
+      }
+
+      router.push({
+        pathname: '/finish-signup',
+        params: { email: formData.email }
+      });
+    } catch (error) {
+      Alert.alert('Error', 'Unable to verify email. Please try again.');
+    }
   };
 
   const handleSocialLogin = (provider: string) => {
