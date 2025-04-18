@@ -237,6 +237,14 @@ We do not sell or share your personal information with third parties except as d
                     </Text>
                   </Pressable>
                 </View>
+                <View style={styles.passwordGuide}>
+                  <Text style={styles.passwordGuideTitle}>Password must contain:</Text>
+                  <Text style={styles.passwordGuideText}>• Minimum of 8 characters</Text>
+                  <Text style={styles.passwordGuideText}>• At least one uppercase letter (A-Z)</Text>
+                  <Text style={styles.passwordGuideText}>• At least one lowercase letter (a-z)</Text>
+                  <Text style={styles.passwordGuideText}>• At least one number (0-9)</Text>
+                  <Text style={styles.passwordGuideText}>• At least one special character (!@#$%^&*)</Text>
+                </View>
               </View>
             </View>
 
@@ -388,11 +396,26 @@ const styles = StyleSheet.create({
   emailText: {
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 16,
+    fontWeight: '600',
   },
   required: {
     color: 'rgba(255, 182, 182, 0.9)',
     fontSize: 13,
     fontStyle: 'italic',
     fontWeight: '500',
+  },
+  passwordGuide: {
+    marginTop: 8,
+    paddingHorizontal: 4,
+  },
+  passwordGuideTitle: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  passwordGuideText: {
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontSize: 12,
+    marginBottom: 2,
   },
 }); 
