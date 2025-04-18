@@ -106,7 +106,7 @@ export default function MoreScreen() {
             <Text style={styles.sectionTitle}>Support</Text>
             <TouchableOpacity 
               style={styles.menuItem}
-              onPress={() => Alert.alert('Coming Soon', 'Help center is under development')}
+              onPress={() => router.push('/support/help-center')}
             >
               <Ionicons name="help-circle-outline" size={24} color="#fff" />
               <Text style={styles.menuItemText}>Help Center</Text>
@@ -115,7 +115,7 @@ export default function MoreScreen() {
 
             <TouchableOpacity 
               style={styles.menuItem}
-              onPress={() => Alert.alert('Coming Soon', 'Privacy settings are under development')}
+              onPress={() => router.push('/support/privacy')}
             >
               <Ionicons name="shield-outline" size={24} color="#fff" />
               <Text style={styles.menuItemText}>Privacy</Text>
