@@ -12,6 +12,26 @@ export default function SignUpScreen() {
   });
 
   const handleSignUp = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!formData.email) {
+      Alert.alert(
+        'Missing Information',
+        'Please enter your email address',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      Alert.alert(
+        'Invalid Email',
+        'Please enter a valid email address',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     // TODO: Implement signup logic
     console.log('Sign up:', formData);
     router.push('/finish-signup');
@@ -242,5 +262,19 @@ const styles = StyleSheet.create({
     color: '#FF8C00',
     fontSize: 14,
     fontWeight: '600',
+  },
+  agreementContainer: {
+    marginTop: 16,
+    paddingHorizontal: 20,
+  },
+  agreementText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  agreementLink: {
+    color: '#FF8C00',
+    textDecorationLine: 'underline',
   },
 }); 

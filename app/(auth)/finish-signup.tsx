@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -8,9 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function FinishSignUpScreen() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    username: '',
     password: '',
-    confirm_password: '',
     first_name: '',
     middle_name: '',
     last_name: '',
@@ -18,7 +16,6 @@ export default function FinishSignUpScreen() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleFinish = () => {
     // TODO: Implement finish signup logic
@@ -46,66 +43,6 @@ export default function FinishSignUpScreen() {
             </View>
 
             <View style={styles.form}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Username</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.username}
-                  onChangeText={(text) => setFormData({ ...formData, username: text })}
-                  placeholder="Choose a username"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                  autoCapitalize="none"
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={formData.password}
-                    onChangeText={(text) => setFormData({ ...formData, password: text })}
-                    placeholder="Create a password"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                    secureTextEntry={!showPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setShowPassword(!showPassword)}
-                  >
-                    <Ionicons 
-                      name={showPassword ? "eye-off-outline" : "eye-outline"} 
-                      size={24} 
-                      color="rgba(255, 255, 255, 0.7)" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Confirm Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={formData.confirm_password}
-                    onChangeText={(text) => setFormData({ ...formData, confirm_password: text })}
-                    placeholder="Confirm your password"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                    secureTextEntry={!showConfirmPassword}
-                  />
-                  <TouchableOpacity
-                    style={styles.eyeIcon}
-                    onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <Ionicons 
-                      name={showConfirmPassword ? "eye-off-outline" : "eye-outline"} 
-                      size={24} 
-                      color="rgba(255, 255, 255, 0.7)" 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>First Name</Text>
                 <TextInput
@@ -149,6 +86,47 @@ export default function FinishSignUpScreen() {
                   placeholderTextColor="rgba(255, 255, 255, 0.5)"
                 />
               </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.input}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={formData.password}
+                    onChangeText={(text) => setFormData({ ...formData, password: text })}
+                    placeholder="Create a password"
+                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    secureTextEntry={!showPassword}
+                  />
+                  <Pressable 
+                    style={styles.passwordToggle}
+                    onPress={() => setShowPassword(!showPassword)}
+                  >
+                    <Text style={styles.passwordToggleText}>
+                      {showPassword ? 'Hide' : 'Show'}
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.agreementContainer}>
+              <Text style={styles.agreementText}>
+                By signing up, you agree to our{' '}
+                <Text 
+                  style={styles.agreementLink}
+                  onPress={() => router.push('/terms')}
+                >
+                  Terms & Conditions
+                </Text>
+                {' '}and{' '}
+                <Text 
+                  style={styles.agreementLink}
+                  onPress={() => router.push('/privacy')}
+                >
+                  Privacy Policy
+                </Text>
+              </Text>
             </View>
           </ScrollView>
 
@@ -207,9 +185,12 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
-    padding: 12,
+    height: 48,
+    paddingHorizontal: 12,
     color: '#fff',
     fontSize: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   footer: {
     padding: 20,
@@ -228,19 +209,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    padding: 12,
-  },
   passwordInput: {
     flex: 1,
     color: '#fff',
     fontSize: 16,
+    height: '100%',
+    padding: 0,
   },
-  eyeIcon: {
-    padding: 8,
+  passwordToggle: {
+    paddingLeft: 8,
+  },
+  passwordToggleText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  agreementContainer: {
+    marginTop: 16,
+    paddingHorizontal: 20,
+  },
+  agreementText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  agreementLink: {
+    color: '#FF8C00',
+    fontWeight: '600',
   },
 }); 
