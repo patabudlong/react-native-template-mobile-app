@@ -94,7 +94,7 @@ export default function MoreScreen() {
 
             <TouchableOpacity 
               style={styles.menuItem}
-              onPress={() => Alert.alert('Coming Soon', 'Notification settings are under development')}
+              onPress={() => router.push('/profile/notifications')}
             >
               <Ionicons name="notifications-outline" size={24} color="#fff" />
               <Text style={styles.menuItemText}>Notifications</Text>
