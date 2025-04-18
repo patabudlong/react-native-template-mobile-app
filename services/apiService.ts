@@ -201,5 +201,37 @@ export const api = {
       console.error('Update user error:', error);
       return { error: 'Failed to update user' };
     }
+  },
+
+  async deleteUser(userId: string): Promise<ApiResponse<{ message: string }>> {
+    try {
+      const url = `${baseUrl}/auth/users/${userId}`;
+      const token = await authService.getToken();
+      
+      if (!token) {
+        return { error: 'No auth token available' };
+      }
+      
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const responseText = await response.text();
+      console.log('Delete user response:', responseText);
+
+      if (!response.ok) {
+        return { error: 'Failed to delete user' };
+      }
+
+      return { data: JSON.parse(responseText) };
+    } catch (error) {
+      console.error('Delete user error:', error);
+      return { error: 'Failed to delete user' };
+    }
   }
 }; 
