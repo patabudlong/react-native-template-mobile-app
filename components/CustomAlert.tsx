@@ -3,15 +3,27 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-interface CustomAlertProps {
+export interface CustomAlertProps {
   visible: boolean;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'question';
   title: string;
   message: string;
-  onClose?: () => void;
+  buttons?: Array<{
+    text: string;
+    style?: 'default' | 'cancel' | 'destructive';
+    onPress: () => void;
+  }>;
+  onClose: () => void;
 }
 
-export function CustomAlert({ visible, type, title, message, onClose }: CustomAlertProps) {
+export const CustomAlert: React.FC<CustomAlertProps> = ({
+  visible,
+  type,
+  title,
+  message,
+  buttons,
+  onClose
+}) => {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -33,9 +45,10 @@ export function CustomAlert({ visible, type, title, message, onClose }: CustomAl
     }
   }, [visible]);
 
-  const gradientColors = type === 'success' 
-    ? ['#00C853', '#69F0AE']
-    : ['#FF5252', '#FF8A80'];
+  const gradientColors = 
+    type === 'success' ? ['#00C853', '#69F0AE'] :
+    type === 'question' ? ['#2196F3', '#64B5F6'] :
+    ['#FF5252', '#FF8A80'];
 
   return (
     <Modal
@@ -62,13 +75,28 @@ export function CustomAlert({ visible, type, title, message, onClose }: CustomAl
             <View style={styles.content}>
               <View style={styles.iconContainer}>
                 <Ionicons 
-                  name={type === 'success' ? 'checkmark' : 'alert'} 
+                  name={
+                    type === 'success' ? 'checkmark' : 
+                    type === 'question' ? 'help' : 
+                    'alert'
+                  } 
                   size={32} 
                   color="#fff" 
                 />
               </View>
               <Text style={styles.title}>{title}</Text>
               <Text style={styles.message}>{message}</Text>
+              <View>
+                {buttons?.map((button, index) => (
+                  <TouchableOpacity 
+                    key={index} 
+                    style={[styles.button, button.style === 'destructive' && styles.destructiveButton]} 
+                    onPress={button.onPress}
+                  >
+                    <Text style={styles.buttonText}>{button.text}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
               <TouchableOpacity 
                 style={styles.button}
                 onPress={onClose}
@@ -147,5 +175,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  destructiveButton: {
+    backgroundColor: '#FF5252',
   },
 });

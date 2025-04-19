@@ -36,7 +36,7 @@ export default function MoreScreen() {
   const [profileImage, setProfileImage] = useState(require('../../assets/images/default-profile.png'));
   const [showAlert, setShowAlert] = useState(false);
   const [alertConfig, setAlertConfig] = useState<{
-    type: 'success' | 'error';
+    type: 'success' | 'error' | 'question';
     title: string;
     message: string;
     action?: () => void;
@@ -77,7 +77,7 @@ export default function MoreScreen() {
 
   const handleLogout = () => {
     setAlertConfig({
-      type: 'error',
+      type: 'question' as const,
       title: 'Logout',
       message: 'Are you sure you want to logout?',
       buttons: [
@@ -89,7 +89,10 @@ export default function MoreScreen() {
         {
           text: 'Logout',
           style: 'destructive',
-          onPress: () => router.replace('/(auth)/login')
+          onPress: () => {
+            setShowAlert(false);
+            router.replace('/(auth)/login');
+          }
         }
       ]
     });
