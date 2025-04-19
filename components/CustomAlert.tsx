@@ -12,26 +12,28 @@ interface CustomAlertProps {
 
 export function CustomAlert({ visible, type, title, message, onClose }: CustomAlertProps) {
   const iconName = type === 'success' ? 'checkmark-circle' : 'alert-circle';
-  const iconColor = type === 'success' ? '#4CAF50' : '#FF6B6B';
+  const themeColor = type === 'success' ? '#00C853' : '#FF5252';
 
   return (
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
     >
       <View style={styles.overlay}>
-        <View style={styles.alertBox}>
-          <View style={[styles.iconContainer, { backgroundColor: type === 'success' ? '#E8F5E9' : '#FFEBEE' }]}>
-            <Ionicons name={iconName} size={32} color={iconColor} />
+        <View style={[styles.alertBox, { borderLeftColor: themeColor, borderLeftWidth: 6 }]}>
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Ionicons name={iconName} size={28} color={themeColor} />
+              <Text style={[styles.title, { color: themeColor }]}>{title}</Text>
+            </View>
+            <Text style={styles.message}>{message}</Text>
           </View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
           <TouchableOpacity 
-            style={[styles.button, { backgroundColor: iconColor }]}
+            style={styles.button}
             onPress={onClose}
           >
-            <Text style={styles.buttonText}>OK</Text>
+            <Text style={[styles.buttonText, { color: themeColor }]}>Dismiss</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -42,18 +44,14 @@ export function CustomAlert({ visible, type, title, message, onClose }: CustomAl
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'flex-end',
     padding: 20,
   },
   alertBox: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    width: '100%',
-    maxWidth: 320,
-    alignItems: 'center',
+    borderRadius: 12,
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -63,37 +61,31 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
+  content: {
+    padding: 20,
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
-    textAlign: 'center',
-    color: '#1A1A1A',
+    marginLeft: 10,
   },
   message: {
     fontSize: 16,
     color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
     lineHeight: 22,
   },
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    width: '100%',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    padding: 16,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
