@@ -5,23 +5,44 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { api } from '../../services/apiService';
+import { CustomAlert } from '../../components/CustomAlert';
 
 export default function SignUpScreen() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
   });
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState<{
+    type: 'success' | 'error';
+    title: string;
+    message: string;
+  }>({
+    type: 'error',
+    title: '',
+    message: ''
+  });
 
   const handleSignUp = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
     if (!formData.email) {
-      Alert.alert('Missing Information', 'Please enter your email address');
+      setAlertConfig({
+        type: 'error',
+        title: 'Missing Information',
+        message: 'Please enter your email address'
+      });
+      setShowAlert(true);
       return;
     }
 
     if (!emailRegex.test(formData.email)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address');
+      setAlertConfig({
+        type: 'error',
+        title: 'Invalid Email',
+        message: 'Please enter a valid email address'
+      });
+      setShowAlert(true);
       return;
     }
 
@@ -29,12 +50,22 @@ export default function SignUpScreen() {
       const response = await api.checkEmail(formData.email);
       
       if (response.error) {
-        Alert.alert('Error', 'Unable to verify email. Please try again.');
+        setAlertConfig({
+          type: 'error',
+          title: 'Error',
+          message: 'Unable to verify email. Please try again.'
+        });
+        setShowAlert(true);
         return;
       }
 
       if (response.data?.exists) {
-        Alert.alert('Email Already Exists', 'This email is already registered. Please use a different email or try logging in.');
+        setAlertConfig({
+          type: 'error',
+          title: 'Email Already Exists',
+          message: 'This email is already registered. Please use a different email or try logging in.'
+        });
+        setShowAlert(true);
         return;
       }
 
@@ -43,7 +74,12 @@ export default function SignUpScreen() {
         params: { email: formData.email }
       });
     } catch (error) {
-      Alert.alert('Error', 'Unable to verify email. Please try again.');
+      setAlertConfig({
+        type: 'error',
+        title: 'Error',
+        message: 'Unable to verify email. Please try again.'
+      });
+      setShowAlert(true);
     }
   };
 
@@ -144,6 +180,13 @@ export default function SignUpScreen() {
           </View>
         </KeyboardAvoidingView>
       </View>
+      <CustomAlert
+        visible={showAlert}
+        type={alertConfig.type}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onClose={() => setShowAlert(false)}
+      />
     </GradientBackground>
   );
 }
