@@ -77,7 +77,7 @@ export default function MoreScreen() {
 
   const handleLogout = () => {
     setAlertConfig({
-      type: 'question' as const,
+      type: 'question',
       title: 'Logout',
       message: 'Are you sure you want to logout?',
       buttons: [
@@ -256,8 +256,13 @@ export default function MoreScreen() {
         type={alertConfig.type}
         title={alertConfig.title}
         message={alertConfig.message}
-        buttons={alertConfig.buttons}
-        onClose={() => setShowAlert(false)}
+        onConfirm={() => {
+          setShowAlert(false);
+          router.replace('/(auth)/login');
+        }}
+        onCancel={() => {
+          setShowAlert(false);
+        }}
       />
     </GradientBackground>
   );

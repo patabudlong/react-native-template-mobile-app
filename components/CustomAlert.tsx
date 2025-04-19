@@ -13,7 +13,9 @@ export interface CustomAlertProps {
     style?: 'default' | 'cancel' | 'destructive';
     onPress: () => void;
   }>;
-  onClose: () => void;
+  onClose?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 export const CustomAlert: React.FC<CustomAlertProps> = ({
@@ -22,7 +24,9 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
   title,
   message,
   buttons,
-  onClose
+  onClose,
+  onConfirm,
+  onCancel
 }) => {
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -97,12 +101,34 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
                   </TouchableOpacity>
                 ))}
               </View>
-              <TouchableOpacity 
-                style={styles.button}
-                onPress={onClose}
-              >
-                <Text style={styles.buttonText}>Close</Text>
-              </TouchableOpacity>
+              {(onConfirm || onCancel) && (
+                <View style={styles.buttonRow}>
+                  {onCancel && (
+                    <TouchableOpacity 
+                      style={[styles.button, styles.cancelButton]} 
+                      onPress={onCancel}
+                    >
+                      <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  )}
+                  {onConfirm && (
+                    <TouchableOpacity 
+                      style={[styles.button, styles.confirmButton]} 
+                      onPress={onConfirm}
+                    >
+                      <Text style={styles.buttonText}>Confirm</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              {!buttons?.length && !onConfirm && !onCancel && onClose && (
+                <TouchableOpacity 
+                  style={styles.button}
+                  onPress={onClose}
+                >
+                  <Text style={styles.buttonText}>Close</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </LinearGradient>
         </Animated.View>
@@ -178,5 +204,18 @@ const styles = StyleSheet.create({
   },
   destructiveButton: {
     backgroundColor: '#FF5252',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop: 16,
+    gap: 12,
+  },
+  cancelButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  confirmButton: {
+    backgroundColor: 'rgba(0, 200, 83, 0.8)',
   },
 });
