@@ -214,7 +214,15 @@ We do not sell or share your personal information with third parties except as d
 
             <View style={styles.form}>
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
+                <View style={styles.labelContainer}>
+                  <Text style={styles.label}>Email</Text>
+                  <Ionicons 
+                    name="checkmark-circle" 
+                    size={18} 
+                    color="#22C55E"
+                    style={styles.checkIcon} 
+                  />
+                </View>
                 <View style={[styles.input, styles.emailContainer]}>
                   <Text style={styles.emailText}>{email}</Text>
                 </View>
@@ -482,4 +490,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 2,
   },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 4,
+  },
+  checkIcon: {
+    marginTop: -5,
+  }
 }); 

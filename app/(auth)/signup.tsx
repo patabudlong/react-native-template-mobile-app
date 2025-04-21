@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert, ActivityIndicator } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -22,6 +22,7 @@ export default function SignUpScreen() {
     title: '',
     message: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,8 +47,10 @@ export default function SignUpScreen() {
       return;
     }
 
+    setIsLoading(true);
     try {
       const response = await api.checkEmail(formData.email);
+      setIsLoading(false);
       
       if (response.error) {
         setAlertConfig({
@@ -74,6 +77,7 @@ export default function SignUpScreen() {
         params: { email: formData.email }
       });
     } catch (error) {
+      setIsLoading(false);
       setAlertConfig({
         type: 'error',
         title: 'Error',
@@ -130,8 +134,13 @@ export default function SignUpScreen() {
               <TouchableOpacity 
                 style={styles.signUpButton}
                 onPress={handleSignUp}
+                disabled={isLoading}
               >
-                <Text style={styles.signUpButtonText}>Continue</Text>
+                {isLoading ? (
+                  <ActivityIndicator color="#FFF" />
+                ) : (
+                  <Text style={styles.signUpButtonText}>Continue</Text>
+                )}
               </TouchableOpacity>
 
               <View style={styles.separatorContainer}>
