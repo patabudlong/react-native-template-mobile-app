@@ -99,13 +99,17 @@ export default function SignUpScreen() {
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.keyboardView}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
         >
           <ScrollView 
             style={styles.scrollView}
-            contentContainerStyle={styles.contentContainer}
+            contentContainerStyle={[
+              styles.contentContainer,
+              { flexGrow: 1 }
+            ]}
             showsVerticalScrollIndicator={false}
             bounces={false}
+            keyboardShouldPersistTaps="handled"
           >
             <View style={styles.header}>
               <TouchableOpacity 
@@ -182,7 +186,10 @@ export default function SignUpScreen() {
           <View style={styles.footer}>
             <View style={styles.loginPrompt}>
               <Text style={styles.loginText}>Already have an account?</Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
+              <TouchableOpacity 
+                onPress={() => router.push('/login')}
+                activeOpacity={0.7}
+              >
                 <Text style={styles.loginLink}>Log In</Text>
               </TouchableOpacity>
             </View>
