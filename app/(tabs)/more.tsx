@@ -258,10 +258,11 @@ export default function MoreScreen() {
         message={alertConfig.message}
         onConfirm={() => {
           setShowAlert(false);
-          router.replace('/(auth)/login');
+          alertConfig.buttons?.[1]?.onPress?.();
         }}
         onCancel={() => {
           setShowAlert(false);
+          alertConfig.buttons?.[0]?.onPress?.();
         }}
       />
     </GradientBackground>

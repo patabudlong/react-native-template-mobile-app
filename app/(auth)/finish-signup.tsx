@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { PolicyModal } from '../../components/PolicyModal';
 import { api } from '../../services/apiService';
+import { CustomAlert } from '../../components/CustomAlert';
 
 export default function FinishSignUpScreen() {
   const params = useLocalSearchParams();
@@ -23,6 +24,21 @@ export default function FinishSignUpScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState<{
+    type: 'success' | 'error' | 'question';
+    title: string;
+    message: string;
+    buttons?: Array<{
+      text: string;
+      style?: 'default' | 'cancel' | 'destructive';
+      onPress: () => void;
+    }>;
+  }>({
+    type: 'error',
+    title: '',
+    message: ''
+  });
 
   const termsContent = `
 1. Acceptance of Terms
@@ -97,13 +113,31 @@ We do not sell or share your personal information with third parties except as d
     console.log('Form data with email:', formData);
     
     if (!formData.first_name || !formData.last_name || !formData.password) {
-      Alert.alert('Missing Information', 'Please fill in all required fields');
+      setAlertConfig({
+        type: 'error',
+        title: 'Missing Information',
+        message: 'Please fill in all required fields',
+        buttons: [{
+          text: 'OK',
+          onPress: () => setShowAlert(false)
+        }]
+      });
+      setShowAlert(true);
       return;
     }
 
     const passwordValidation = validatePassword(formData.password);
     if (!passwordValidation.isValid) {
-      Alert.alert('Invalid Password', passwordValidation.message);
+      setAlertConfig({
+        type: 'error',
+        title: 'Invalid Password',
+        message: passwordValidation.message,
+        buttons: [{
+          text: 'OK',
+          onPress: () => setShowAlert(false)
+        }]
+      });
+      setShowAlert(true);
       return;
     }
 
@@ -120,22 +154,41 @@ We do not sell or share your personal information with third parties except as d
       const response = await api.register(registerData);
       
       if (response.error) {
-        Alert.alert('Registration Failed', response.error);
+        setAlertConfig({
+          type: 'error',
+          title: 'Registration Failed',
+          message: response.error,
+          buttons: [{
+            text: 'OK',
+            onPress: () => setShowAlert(false)
+          }]
+        });
+        setShowAlert(true);
         return;
       }
 
-      Alert.alert(
-        'Registration Successful',
-        'Your account has been created successfully. Please login to continue.',
-        [
-          {
-            text: 'OK',
-            onPress: () => router.replace('/login')
-          }
-        ]
-      );
+      setAlertConfig({
+        type: 'success',
+        title: 'Registration Successful',
+        message: 'Your account has been created successfully. Please login to continue.',
+        buttons: [{
+          text: 'OK',
+          onPress: () => router.replace('/login')
+        }]
+      });
+      setShowAlert(true);
+
     } catch (error) {
-      Alert.alert('Error', 'Failed to register. Please try again.');
+      setAlertConfig({
+        type: 'error',
+        title: 'Error',
+        message: 'Failed to register. Please try again.',
+        buttons: [{
+          text: 'OK',
+          onPress: () => setShowAlert(false)
+        }]
+      });
+      setShowAlert(true);
     }
   };
 
@@ -291,6 +344,17 @@ We do not sell or share your personal information with third parties except as d
         onClose={() => setShowPrivacy(false)}
         title="Privacy Policy"
         content={privacyContent}
+      />
+
+      <CustomAlert
+        visible={showAlert}
+        type={alertConfig.type}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onConfirm={() => {
+          setShowAlert(false);
+          alertConfig.buttons?.[0]?.onPress?.();
+        }}
       />
     </GradientBackground>
   );
