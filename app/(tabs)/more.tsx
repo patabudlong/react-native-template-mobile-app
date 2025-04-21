@@ -5,19 +5,51 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useUser } from '../../contexts/UserContext';
+import { CustomAlert } from '../../components/CustomAlert';
+import { api } from '../../services/apiService';
+
+interface UserDetails {
+  id: string;
+  email: string;
+  username: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  extension_name: string;
+  full_name: string;
+}
 
 const MAX_NAME_LENGTH = 20;
 
-const formatName = (name: string | undefined) => {
-  if (!name) return 'Guest';
-  if (name.length <= MAX_NAME_LENGTH) return name;
-  return `${name.substring(0, MAX_NAME_LENGTH)}...`;
+const formatName = (user: UserDetails | null) => {
+  if (!user?.first_name) return 'Guest';
+  
+  const fullName = `${user.first_name} ${user.last_name}${user.middle_name ? ` ${user.middle_name.charAt(0)}.` : ''}`;
+  
+  if (fullName.length <= MAX_NAME_LENGTH) return fullName;
+  return `${fullName.substring(0, MAX_NAME_LENGTH)}...`;
 };
 
 export default function MoreScreen() {
   const router = useRouter();
   const { user } = useUser();
   const [profileImage, setProfileImage] = useState(require('../../assets/images/default-profile.png'));
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertConfig, setAlertConfig] = useState<{
+    type: 'success' | 'error' | 'question';
+    title: string;
+    message: string;
+    action?: () => void;
+    buttons?: Array<{
+      text: string;
+      style?: 'default' | 'cancel' | 'destructive';
+      onPress: () => void;
+    }>;
+  }>({
+    type: 'error',
+    title: '',
+    message: ''
+  });
 
   const handleProfilePhotoChange = async () => {
     try {
@@ -43,6 +75,82 @@ export default function MoreScreen() {
     }
   };
 
+  const handleLogout = () => {
+    setAlertConfig({
+      type: 'question',
+      title: 'Logout',
+      message: 'Are you sure you want to logout?',
+      buttons: [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setShowAlert(false)
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => {
+            setShowAlert(false);
+            router.replace('/(auth)/login');
+          }
+        }
+      ]
+    });
+    setShowAlert(true);
+  };
+
+  const handleDeleteAccount = () => {
+    setAlertConfig({
+      type: 'error',
+      title: 'Delete Account',
+      message: 'Are you sure you want to delete your account? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setShowAlert(false)
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            if (!user?.id) return;
+            
+            try {
+              const response = await api.deleteUser(user.id);
+              
+              if (response.error) {
+                setAlertConfig({
+                  type: 'error',
+                  title: 'Error',
+                  message: response.error,
+                  buttons: [{
+                    text: 'OK',
+                    onPress: () => setShowAlert(false)
+                  }]
+                });
+                return;
+              }
+
+              router.replace('/(auth)/login');
+            } catch (error) {
+              setAlertConfig({
+                type: 'error',
+                title: 'Error',
+                message: 'Failed to delete account',
+                buttons: [{
+                  text: 'OK',
+                  onPress: () => setShowAlert(false)
+                }]
+              });
+            }
+          }
+        }
+      ]
+    });
+    setShowAlert(true);
+  };
+
   return (
     <GradientBackground>
       <View style={styles.container}>
@@ -65,7 +173,7 @@ export default function MoreScreen() {
               </TouchableOpacity>
               <View style={styles.profileInfo}>
                 <Text style={styles.fullName}>
-                  {formatName(user?.full_name)}
+                  {formatName(user)}
                 </Text>
                 <Text style={styles.email}>{user?.email || 'No email'}</Text>
               </View>
@@ -100,6 +208,14 @@ export default function MoreScreen() {
               <Text style={styles.menuItemText}>Notifications</Text>
               <Ionicons name="chevron-forward" size={24} color="#fff" />
             </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={handleLogout}
+            >
+              <Ionicons name="log-out-outline" size={24} color="rgba(255, 182, 182, 0.95)" />
+              <Text style={[styles.menuItemText, styles.logoutText]}>Logout</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.section}>
@@ -122,31 +238,33 @@ export default function MoreScreen() {
               <Ionicons name="chevron-forward" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
-        </ScrollView>
 
-        <TouchableOpacity 
-          style={styles.logoutButton}
-          onPress={() => Alert.alert(
-            'Logout',
-            'Are you sure you want to logout?',
-            [
-              {
-                text: 'Cancel',
-                style: 'cancel',
-              },
-              {
-                text: 'Logout',
-                style: 'destructive',
-                onPress: () => {
-                  router.replace('/(auth)/login');
-                },
-              },
-            ],
-          )}
-        >
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+          <View style={styles.section}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={handleDeleteAccount}
+            >
+              <Ionicons name="trash-outline" size={24} color="rgba(255, 182, 182, 0.95)" />
+              <Text style={[styles.menuItemText, styles.deleteText]}>Delete My Account</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
+
+      <CustomAlert
+        visible={showAlert}
+        type={alertConfig.type}
+        title={alertConfig.title}
+        message={alertConfig.message}
+        onConfirm={() => {
+          setShowAlert(false);
+          alertConfig.buttons?.[1]?.onPress?.();
+        }}
+        onCancel={() => {
+          setShowAlert(false);
+          alertConfig.buttons?.[0]?.onPress?.();
+        }}
+      />
     </GradientBackground>
   );
 }
@@ -188,7 +306,7 @@ const styles = StyleSheet.create({
   fullName: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 4,
   },
   email: {
@@ -214,7 +332,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 16,
     opacity: 0.9,
   },
@@ -227,22 +345,24 @@ const styles = StyleSheet.create({
   menuItemText: {
     flex: 1,
     fontSize: 16,
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 0.9)',
     marginLeft: 16,
   },
   logoutButton: {
-    backgroundColor: 'rgba(255, 140, 0, 0.2)',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 140, 0, 0.4)',
+    marginTop: 8,
   },
   logoutText: {
-    color: '#FF8C00',
-    fontSize: 17,
-    fontWeight: '700',
+    color: 'rgba(255, 182, 182, 0.95)',
+  },
+  deleteAccount: {
+    marginTop: 8,
+  },
+  deleteText: {
+    color: 'rgba(255, 182, 182, 0.95)',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    marginVertical: 8,
   },
 }); 
