@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Pressable, Alert } from 'react-native';
 import { GradientBackground } from '../../components/GradientBackground';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -192,6 +192,8 @@ We do not sell or share your personal information with third parties except as d
     }
   };
 
+  const passwordInputRef = useRef<TextInput | null>(null);
+
   return (
     <GradientBackground>
       <StatusBar style="light" />
@@ -206,6 +208,7 @@ We do not sell or share your personal information with third parties except as d
             contentContainerStyle={styles.contentContainer}
             showsVerticalScrollIndicator={false}
             bounces={false}
+            keyboardShouldPersistTaps="always"
           >
             <View style={styles.header}>
               <Text style={styles.title}>Complete Your Profile</Text>
@@ -282,21 +285,25 @@ We do not sell or share your personal information with third parties except as d
                 </Text>
                 <View style={styles.input}>
                   <TextInput
+                    ref={passwordInputRef}
                     style={styles.passwordInput}
                     value={formData.password}
                     onChangeText={(text) => setFormData({ ...formData, password: text })}
                     placeholder="Create a password"
                     placeholderTextColor="rgba(255, 255, 255, 0.5)"
                     secureTextEntry={!showPassword}
+                    blurOnSubmit={false}
                   />
-                  <Pressable 
+                  <TouchableOpacity 
                     style={styles.passwordToggle}
                     onPress={() => setShowPassword(!showPassword)}
+                    activeOpacity={0.7}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   >
                     <Text style={styles.passwordToggleText}>
                       {showPassword ? 'Hide' : 'Show'}
                     </Text>
-                  </Pressable>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.passwordGuide}>
                   <Text style={styles.passwordGuideTitle}>Password must contain:</Text>
